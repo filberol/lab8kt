@@ -13,8 +13,13 @@ fun main(args: Array<String>) {
     val config = ConfigManager(language)
     //Initializing log
     val history = HistoryManager(config, language)
+    //Creating Object Utils
+    val validator = FieldValidator()
+    val builder = ObjectBuilder()
     //Loading Collection
-    val collection = CollectionManager()
+    val collection = CollectionManager(language, validator, builder)
+    if (args.isNotEmpty()) config.setDataPath(args[0])
+    collection.safeLoad(config.getDataPath())
     //Initializing Shell
     val console = Console(history, config, language, collection)
     //Starting interactive mode

@@ -6,5 +6,4 @@ class ExecuteException(
     lang: LanguageManager
 ): RuntimeException(
     lang.getString(lang.getString("ExecuteException"))
-) {
-}
+)

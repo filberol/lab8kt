@@ -11,7 +11,5 @@ data class Person(
     private val height: Int,
     private val birthday: LocalDate,
     private val eyeColor: EyeColor,
-
-    ) {
-
-}
+    private val hairColor: HairColor
+    )

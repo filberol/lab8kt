@@ -27,6 +27,7 @@ class ConfigManager(private val language: LanguageManager) {
         config["HistoryLength"] = "7"
         config["HistoryLog"] = "true"
         config["HistoryLogUnknown"] = "false"
+        config["CollectionPath"] = "./app/src/main/resources/"
     }
     private fun initialize() {
         if (config.contains("Language")) {
@@ -35,5 +36,11 @@ class ConfigManager(private val language: LanguageManager) {
     }
     fun getString(arg: String): String {
         return config.getProperty(arg)
+    }
+    fun getDataPath(): String {
+        return (config.getProperty("CollectionPath") + "collection.csv")
+    }
+    fun setDataPath(path: String) {
+        config["CollectionPath"] = path
     }
 }
