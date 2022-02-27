@@ -27,9 +27,9 @@ class HistoryManager(
     }
 
     fun printHistory() {
-        println(lang.getString("histHeading") + "$historyLength")
+        System.out.printf(lang.getString("HistHeading") + "\n", historyLength)
         if (historyLog.size < historyLength) {
-            println(lang.getString("noHistory"))
+            println(lang.getString("NoHistory"))
         }
         val count = historyLog.size
         historyLog.stream()

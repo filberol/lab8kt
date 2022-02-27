@@ -1,6 +1,7 @@
 package lab5.data.utilities
 
 import lab5.data.commands.AddElementCommand
+import lab5.data.exceptions.FullCollectionException
 import lab5.data.objects.*
 import lab5.data.parsers.CsvParser
 import java.io.FileNotFoundException
@@ -11,8 +12,8 @@ class CollectionManager(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder
     ) {
-    private var collection: ArrayDeque<Person?> = ArrayDeque()
-    private var ids: ArrayList<Int> = ArrayList()
+    private var collection: ArrayDeque<Person> = ArrayDeque()
+    private var ids: HashSet<Int> = HashSet()
 
     fun safeLoad(path: String): Boolean {
         try {
@@ -35,13 +36,52 @@ class CollectionManager(
         serializedCollection.removeAt(0)
 
         for (element: Array<String> in serializedCollection) {
-            val a: Person? = AddElementCommand(language, validator, builder).execute(element)
-            if (a != null) {
-                collection.add(a)
+            AddElementCommand(language, validator, builder, this).execute(element)
+        }
+        System.out.printf(language.getString("LoadCount") + "\n", collection.size)
+        return true
+    }
+
+    fun addNotNull(element: Person?): Boolean {
+        if (element != null) {
+            ids.add(element.getID())
+            collection.add(element)
+        }
+        return true
+    }
+
+    fun getFreeID(): Int {
+        for (id in 1..Int.MAX_VALUE) {
+            if (!ids.contains(id)) {
+                return id
             }
         }
-        System.out.printf(language.getString("Total") + "\n", collection.size)
+        throw FullCollectionException(language)
+    }
 
+    fun deleteByID(id: Int): Boolean {
+        for(person in collection) {
+            if (person.getID() == id) {
+                collection.remove(person)
+                return true
+            }
+        }
+        return false
+    }
+
+    fun printCollection(): Boolean {
+        if (collection.isNotEmpty()) {
+            println(
+                language.getString("TabHeading") + "\n" +
+                        language.getString("TabHead") + "\n" +
+                        language.getString("MidLine")
+            )
+            collection.forEach(::println)
+            println(language.getString("EndLine"))
+            System.out.printf(language.getString("Total") + "\n", collection.size)
+        } else {
+            println(language.getString("EmptyCollection"))
+        }
         return true
     }
 

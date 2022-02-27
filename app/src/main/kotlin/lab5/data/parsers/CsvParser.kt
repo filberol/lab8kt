@@ -24,6 +24,8 @@ class CsvParser {
         for (s in lines) {
             serializedCollection.add(s.trim().split(",").toTypedArray())
         }
+        input.close()
+        inputStream.close()
         return serializedCollection
     }
 }

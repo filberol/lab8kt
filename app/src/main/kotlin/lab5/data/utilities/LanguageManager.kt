@@ -9,7 +9,8 @@ class LanguageManager {
     }
 
     private fun setLanguage() {
-        language = ResourceBundle.getBundle("lang/localization", Locale("en"))//ПОСТАВЬ НОРМАЛЬНУЮ ЛОКАЛЬ
+        val locale = Locale("en","US")
+        language = ResourceBundle.getBundle("lang/localization", locale)//ПОСТАВЬ НОРМАЛЬНУЮ ЛОКАЛЬ
     }
     fun setLanguage(locale: String) {
         language = ResourceBundle.getBundle("lang/localization", Locale(locale))

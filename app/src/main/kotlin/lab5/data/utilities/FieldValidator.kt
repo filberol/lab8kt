@@ -19,12 +19,12 @@ class FieldValidator {
         HairColor::class to {x: String -> HairColor.parse(x)}
     )
 
-    fun parseField(to: String, out: KClass<out Any>): Any {
+    fun parseField(to: String?, out: KClass<out Any>): Any? {
         val func = table[out]!!
-        try {
-            return func.invoke(to)
+        return try {
+            when (to) {null -> null else -> func.invoke(to)}
         } catch (e: Exception) {
-            throw ParseException(to)
+            throw ParseException(to!!)
         }
     }
 }

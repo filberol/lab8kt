@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
     if (args.isNotEmpty()) config.setDataPath(args[0])
     collection.safeLoad(config.getDataPath())
     //Initializing Shell
-    val console = Console(history, config, language, collection)
+    val console = Console(history, language, collection, config, validator, builder)
     //Starting interactive mode
     val userScript = InteractiveMode(console, language)
     while (true) {
