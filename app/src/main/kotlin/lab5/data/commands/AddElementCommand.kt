@@ -2,7 +2,6 @@ package lab5.data.commands
 
 import lab5.data.annotations.*
 import lab5.data.exceptions.FullCollectionException
-import lab5.data.exceptions.ParseException
 import lab5.data.objects.EyeColor
 import lab5.data.objects.HairColor
 import lab5.data.utilities.*
@@ -16,7 +15,7 @@ class AddElementCommand(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder,
     private val collection: CollectionManager
-): Command(language) {
+): AbstractCommand(language) {
 
     @HardCoded
     private val fieldTable: List<KClass<out Any>> = listOf(
@@ -28,19 +27,27 @@ class AddElementCommand(
         Int::class,//Height
         LocalDate::class,//Birthday
         EyeColor::class,//Eye Color
-        HairColor::class//Hair Color
+        HairColor::class,//Hair Color
+        Float::class,//CordX
+        Float::class,//CordY
+        String::class//LocName
     )
 
     fun execute(arguments: Array<String>): Boolean {
         val degenerated: ArrayList<Any> = ArrayList()
-        for(i in 0..8) {
-            try {
-                degenerated.add(validator.parseField(arguments[i],fieldTable[i])!!)
-            } catch (e: ParseException) {
-                System.out.printf(language.getString("ParseException") + "\n", arguments[i])
-                return false
+        try {
+            for (i in 0..11) {
+                try {
+                    degenerated.add(validator.parseField(arguments[i], fieldTable[i])!!)
+                } catch (e: Exception) {
+                    System.out.printf(language.getString("ParseException") + "\n", arguments[i])
+                    return false
+                }
             }
-        }
+        } catch (e: IndexOutOfBoundsException) {
+        println(language.getString("ParseException2"))
+        return false
+    }
         return collection.addNotNull(builder.buildObject(degenerated))
     }
 

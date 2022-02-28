@@ -12,7 +12,8 @@ data class Person(
     private val height: Int,
     private val birthday: LocalDate,
     private val eyeColor: EyeColor,
-    private val hairColor: HairColor
+    private val hairColor: HairColor,
+    private val location: Location
     ) {
 
     fun getID(): Int {
@@ -21,8 +22,14 @@ data class Person(
 
     @HardCoded
     override fun toString(): String {
-        return String.format("| %4s | %28s | %10s | %s | %6s | %s | %10s | %10s |",
+        return String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
             id, name, coordinates.toString(), creationDate, height, birthday.toString(),
-            eyeColor.toString(), hairColor.toString())
+            eyeColor.toString(), hairColor.toString(), location.toString())
+    }
+    @HardCoded
+    fun serialize(): String {
+        return String.format("%d,%s,%s,%s,%d,%s,%s,%s,%s",
+            id, name, coordinates.serialize(), creationDate.toString(), height,
+            birthday.toString(), eyeColor.toString(), hairColor.toString(), location.serialize())
     }
 }

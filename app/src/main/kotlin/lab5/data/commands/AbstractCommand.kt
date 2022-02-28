@@ -6,7 +6,7 @@ import lab5.data.utilities.LanguageManager
 /**
  * Abstract command when executing anything will return a boolean value as a feedback of the execution of the command.
  */
-abstract class Command(lang: LanguageManager) {
+abstract class AbstractCommand(lang: LanguageManager) {
     /**
      * Specified langHolder returns language needed to print to console.
      */
@@ -44,13 +44,5 @@ abstract class Command(lang: LanguageManager) {
      */
     open fun safeExecute(arguments: ArrayList<String>): Boolean {
         return true
-    }
-
-    /**
-     * The command is identified as its class only. If the command already exists,
-     * it will not be created again.
-     */
-    override fun hashCode(): Int {
-        return this.javaClass.hashCode()
     }
 }

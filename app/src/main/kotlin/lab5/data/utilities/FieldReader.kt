@@ -30,7 +30,10 @@ class FieldReader(
         Int::class,//Height
         LocalDate::class,//Birthday
         EyeColor::class,//Eye Color
-        HairColor::class//Hair Color
+        HairColor::class,//Hair Color
+        Float::class,//CordX
+        Float::class,//CordY
+        String::class//LocName
     )
 
     @UserEnter
@@ -48,7 +51,7 @@ class FieldReader(
     fun askFields(id: Int): Person? {
         @HardCoded
         degenerated.add(0,id)
-        for(i in 0..6) {
+        for(i in 0..9) {
             val a = readValue(i)
             if (a == null){
                return null

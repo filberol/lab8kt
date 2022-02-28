@@ -16,7 +16,8 @@ class FieldValidator {
         ZonedDateTime::class to {x: String -> ZonedDateTime.parse(x)},
         LocalDate::class to {x: String -> LocalDate.parse(x)},
         EyeColor::class to {x: String -> EyeColor.parse(x)},
-        HairColor::class to {x: String -> HairColor.parse(x)}
+        HairColor::class to {x: String -> HairColor.parse(x)},
+        Float::class to String::toFloat
     )
 
     fun parseField(to: String?, out: KClass<out Any>): Any? {

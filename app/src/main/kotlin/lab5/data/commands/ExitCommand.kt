@@ -6,7 +6,7 @@ import kotlin.system.exitProcess
 
 class ExitCommand(
     private val language: LanguageManager
-): Command(language) {
+): AbstractCommand(language) {
 
     @Throws(RedundantArgsException::class)
     override fun execute(arguments: ArrayList<String>): Boolean {

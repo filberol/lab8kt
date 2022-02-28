@@ -11,7 +11,7 @@ class UpdateIDCommand(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder,
     private val collection: CollectionManager
-): Command(language) {
+): AbstractCommand(language) {
 
     override fun execute(arguments: ArrayList<String>): Boolean {
         if (arguments[0] != "id") throw NotEnoughArgsException(language)

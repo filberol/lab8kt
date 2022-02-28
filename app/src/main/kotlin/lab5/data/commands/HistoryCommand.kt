@@ -6,7 +6,7 @@ import lab5.data.utilities.LanguageManager
 
 class HistoryCommand(
     private val language: LanguageManager
-): Command(language) {
+): AbstractCommand(language) {
 
     @Throws(RedundantArgsException::class)
     private fun execute(arguments: ArrayList<String>

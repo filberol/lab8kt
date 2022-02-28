@@ -7,12 +7,12 @@ class Console(
     private val history: HistoryManager,
     private val lang: LanguageManager,
     private val collection: CollectionManager,
-    config: ConfigManager,
+    private val config: ConfigManager,
     validator: FieldValidator,
     builder: ObjectBuilder
 ) {
     init {
-        println(lang.getString("Welcome") + "0.3.5 alpha")
+        println(lang.getString("Welcome") + "0.4.1 alpha")
         println("             \\|||/")
         println("             (o.o)")
         println("=---------ooO-(_)-Ooo----------=")
@@ -26,6 +26,8 @@ class Console(
     private val updateIDCommand = UpdateIDCommand(lang, validator, builder, collection)
     private val printCollectionCommand = PrintCollectionCommand(lang, collection)
     private val removeByIDCommand = RemoveByIDCommand(lang, collection)
+    private val saveCollectionCommand = SaveCollectionCommand(lang, collection)
+    private val executeScriptCommand = ExecuteScriptCommand(lang, this)
 
     fun eatCommand(command: String, arguments: ArrayList<String>) {
         when (command) {
@@ -56,6 +58,10 @@ class Console(
             "remove_by_id" -> {
                 history.saveCommand(command)
                 removeByIDCommand.safeExecute(arguments)
+            }
+            "save" -> {
+                history.saveCommand(command)
+                saveCollectionCommand.safeExecute(config.getDataPath(), arguments)
             }
             else -> {
                 if (logUnknown) {

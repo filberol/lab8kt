@@ -7,7 +7,7 @@ import lab5.data.utilities.LanguageManager
 
 class ClearCollectionCommand(
     private val language: LanguageManager
-): Command(language) {
+): AbstractCommand(language) {
 
     @Throws(RedundantArgsException::class)
     private fun execute(arguments: ArrayList<String>, collection: CollectionManager): Boolean {

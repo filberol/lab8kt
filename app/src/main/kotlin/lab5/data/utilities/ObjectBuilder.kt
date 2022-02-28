@@ -1,9 +1,6 @@
 package lab5.data.utilities
 
-import lab5.data.objects.Coordinates
-import lab5.data.objects.EyeColor
-import lab5.data.objects.HairColor
-import lab5.data.objects.Person
+import lab5.data.objects.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -20,7 +17,12 @@ class ObjectBuilder {
             l[5] as Int,
             l[6] as LocalDate,
             l[7] as EyeColor,
-            l[8] as HairColor
+            l[8] as HairColor,
+            Location(
+                l[9] as Float,
+                l[10] as Float,
+                l[11] as String
+            )
         )
     }
 }

@@ -1,5 +1,7 @@
 package lab5.data.utilities
 
+import lab5.data.annotations.FileReader
+import lab5.data.annotations.HardCoded
 import lab5.data.commands.AddElementCommand
 import lab5.data.exceptions.FullCollectionException
 import lab5.data.objects.*
@@ -25,21 +27,29 @@ class CollectionManager(
         } catch (e: IOException) {
             println(path + language.getString("DataIOError"))
         }
-        return false
+        return true
     }
 
+    @FileReader
     @Throws(IOException::class)
     fun loadCollection(path: String): Boolean {
         println(language.getString("CollectionLoad"))
-
         val serializedCollection: ArrayList<Array<String>> = CsvParser().readCollection(path)
-        serializedCollection.removeAt(0)
 
         for (element: Array<String> in serializedCollection) {
-            AddElementCommand(language, validator, builder, this).execute(element)
+            @HardCoded
+            if (element.size == 12) {
+                AddElementCommand(language, validator, builder, this).execute(element)
+            }
         }
         System.out.printf(language.getString("LoadCount") + "\n", collection.size)
         return true
+    }
+
+    fun serialize(): ArrayList<String> {
+        val serialized: ArrayList<String> = ArrayList()
+        collection.mapTo(serialized) {it.serialize()}
+        return serialized
     }
 
     fun addNotNull(element: Person?): Boolean {

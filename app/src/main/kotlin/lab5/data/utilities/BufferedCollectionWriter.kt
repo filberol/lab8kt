@@ -8,11 +8,10 @@ class BufferedCollectionWriter(
 ) {
     private val writer = BufferedWriter(PrintWriter(path))
 
-    fun writeLine(line: String) {
-        writer.write(line)
-    }
-
-    fun close() {
+    fun writeCollection(serialized: ArrayList<String>) {
+        for (line: String in serialized) {
+            writer.write(line + "\n")
+        }
         writer.close()
     }
 }

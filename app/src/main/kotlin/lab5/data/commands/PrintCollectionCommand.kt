@@ -7,7 +7,7 @@ import lab5.data.utilities.LanguageManager
 class PrintCollectionCommand(
     private val language: LanguageManager,
     private val collection: CollectionManager
-): Command(language) {
+): AbstractCommand(language) {
 
     override fun execute(arguments: ArrayList<String>): Boolean {
         if (arguments.isNotEmpty()) {
