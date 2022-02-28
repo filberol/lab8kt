@@ -13,7 +13,7 @@ class UpdateIDCommand(
     private val collection: CollectionManager
 ): AbstractCommand(language) {
 
-    override fun execute(arguments: ArrayList<String>): Boolean {
+    fun execute(arguments: ArrayList<String>): Boolean {
         if (arguments[0] != "id") throw NotEnoughArgsException(language)
         val id = arguments[1].toInt()
         if (AddElementCommand(language, validator, builder, collection).safeExecute(ArrayList(), id)) {
@@ -25,7 +25,7 @@ class UpdateIDCommand(
         return true
     }
 
-    override fun safeExecute(arguments: ArrayList<String>): Boolean {
+    fun safeExecute(arguments: ArrayList<String>): Boolean {
         try {
             execute(arguments)
         } catch (e: Exception) {

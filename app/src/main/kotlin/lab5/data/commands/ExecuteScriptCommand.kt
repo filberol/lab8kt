@@ -15,7 +15,7 @@ class ExecuteScriptCommand(
         return true
     }
 
-    override fun safeExecute(arguments: ArrayList<String>): Boolean {
+    fun safeExecute(arguments: ArrayList<String>): Boolean {
         if (arguments.isEmpty()) {
             for (path in arguments) {
                 try {

@@ -8,6 +8,7 @@ class Console(
     private val lang: LanguageManager,
     private val collection: CollectionManager,
     private val config: ConfigManager,
+    private val comparator: PersonComparator,
     validator: FieldValidator,
     builder: ObjectBuilder
 ) {
@@ -28,6 +29,7 @@ class Console(
     private val removeByIDCommand = RemoveByIDCommand(lang, collection)
     private val saveCollectionCommand = SaveCollectionCommand(lang, collection)
     private val executeScriptCommand = ExecuteScriptCommand(lang, this)
+    private val removeFirstCommand = RemoveFirstCommand(lang, collection)
 
     fun eatCommand(command: String, arguments: ArrayList<String>) {
         when (command) {
@@ -53,7 +55,7 @@ class Console(
             }
             "show" -> {
                 history.saveCommand(command)
-                printCollectionCommand.safeExecute(arguments)
+                printCollectionCommand.safeExecute(arguments, comparator.idComparator, collection.getSize())
             }
             "remove_by_id" -> {
                 history.saveCommand(command)
@@ -62,6 +64,14 @@ class Console(
             "save" -> {
                 history.saveCommand(command)
                 saveCollectionCommand.safeExecute(config.getDataPath(), arguments)
+            }
+            "execute_script" -> {
+                history.saveCommand(command)
+                executeScriptCommand.safeExecute(arguments)
+            }
+            "remove_first" -> {
+                history.saveCommand(command)
+                removeFirstCommand.safeExecute(arguments, comparator.idComparator)
             }
             else -> {
                 if (logUnknown) {

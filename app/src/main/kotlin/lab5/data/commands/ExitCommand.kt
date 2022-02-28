@@ -9,13 +9,13 @@ class ExitCommand(
 ): AbstractCommand(language) {
 
     @Throws(RedundantArgsException::class)
-    override fun execute(arguments: ArrayList<String>): Boolean {
+    fun execute(arguments: ArrayList<String>): Boolean {
         if (arguments.isNotEmpty()) {
             throw RedundantArgsException(language)
         } else exitProcess(54)
     }
 
-    override fun safeExecute(arguments: ArrayList<String>): Boolean {
+    fun safeExecute(arguments: ArrayList<String>): Boolean {
         try {
             execute(arguments)
         } catch (e: RedundantArgsException) {

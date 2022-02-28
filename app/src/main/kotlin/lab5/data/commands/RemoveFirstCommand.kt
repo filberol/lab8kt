@@ -5,29 +5,29 @@ import lab5.data.objects.Person
 import lab5.data.utilities.CollectionManager
 import lab5.data.utilities.LanguageManager
 
-class PrintCollectionCommand(
+class RemoveFirstCommand(
     private val language: LanguageManager,
-    private val collection: CollectionManager,
+    private val collection: CollectionManager
 ): AbstractCommand(language) {
-
-    fun execute(arguments: ArrayList<String>, comparator: Comparator<Person>, range: Int): Boolean {
+    fun execute(arguments: ArrayList<String>, comparator: Comparator<Person>): Boolean {
         if (arguments.isNotEmpty()) {
             throw RedundantArgsException(language)
         } else {
             collection.sortWith(comparator)
-            collection.printCollection(range-1)
+            collection.deleteElement(0)
+            println(language.getString("Done"))
+            return true
         }
-        return false
     }
-
-    fun safeExecute(arguments: ArrayList<String>, comparator: Comparator<Person>, range: Int): Boolean {
+    fun safeExecute(arguments: ArrayList<String>, comparator: Comparator<Person>): Boolean {
         try {
-            execute(arguments, comparator, range)
+            execute(arguments, comparator)
         } catch (e: RedundantArgsException) {
             println(e.message)
             if (ProceedCommand(language).safeExecute()) {
                 collection.sortWith(comparator)
-                collection.printCollection(range-1)
+                collection.deleteElement(0)
+                println(language.getString("Done"))
             } else return false
         }
         return true

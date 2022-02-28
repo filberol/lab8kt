@@ -19,7 +19,7 @@ class ProceedCommand(
         throw SyntaxException(language)
     }
 
-    fun safeExecute(): Boolean {
+    override fun safeExecute(): Boolean {
         return try {
             execute()
         } catch (e: SyntaxException) {

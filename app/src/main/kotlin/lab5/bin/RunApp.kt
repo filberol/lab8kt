@@ -16,12 +16,13 @@ fun main(args: Array<String>) {
     //Creating Object Utils
     val validator = FieldValidator()
     val builder = ObjectBuilder()
+    val comparator = PersonComparator()
     //Loading Collection
     val collection = CollectionManager(language, validator, builder)
     if (args.isNotEmpty()) config.setDataPath(args[0])
     collection.safeLoad(config.getDataPath())
     //Initializing Shell
-    val console = Console(history, language, collection, config, validator, builder)
+    val console = Console(history, language, collection, config, comparator, validator, builder)
     //Starting interactive mode
     val userScript = InteractiveMode(console, language)
     while (true) {

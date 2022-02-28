@@ -20,6 +20,10 @@ data class Person(
         return id
     }
 
+    fun getBirthday(): LocalDate {
+        return birthday
+    }
+
     @HardCoded
     override fun toString(): String {
         return String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",

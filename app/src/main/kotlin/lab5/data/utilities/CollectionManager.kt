@@ -60,6 +60,10 @@ class CollectionManager(
         return true
     }
 
+    fun getSize(): Int {
+        return collection.size
+    }
+
     fun getFreeID(): Int {
         for (id in 1..Int.MAX_VALUE) {
             if (!ids.contains(id)) {
@@ -79,19 +83,29 @@ class CollectionManager(
         return false
     }
 
-    fun printCollection(): Boolean {
+    fun sortWith(comparator: Comparator<Person>): Boolean {
+        collection.sortWith(comparator)
+        return true
+    }
+
+    fun printCollection(int: Int): Boolean {
         if (collection.isNotEmpty()) {
             println(
                 language.getString("TabHeading") + "\n" +
                         language.getString("TabHead") + "\n" +
                         language.getString("MidLine")
             )
-            collection.forEach(::println)
+            collection.slice(0..int).forEach(::println)
             println(language.getString("EndLine"))
             System.out.printf(language.getString("Total") + "\n", collection.size)
         } else {
             println(language.getString("EmptyCollection"))
         }
+        return true
+    }
+
+    fun deleteElement(index: Int): Boolean {
+        collection.removeAt(index)
         return true
     }
 

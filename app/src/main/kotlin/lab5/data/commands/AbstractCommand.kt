@@ -35,14 +35,14 @@ abstract class AbstractCommand(lang: LanguageManager) {
      * @throws RedundantArgsException Just in case you don't understand what's needed.
      */
     @Throws(ExecuteException::class, SyntaxException::class, RedundantArgsException::class)
-    open fun execute(arguments: ArrayList<String>): Boolean {
+    private fun execute(): Boolean {
         return true
     }
 
     /**
      * Protected execute command recursively calling usual execution and watching after exceptions.
      */
-    open fun safeExecute(arguments: ArrayList<String>): Boolean {
+    open fun safeExecute(): Boolean {
         return true
     }
 }
