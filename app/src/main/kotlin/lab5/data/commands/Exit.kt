@@ -4,7 +4,10 @@ import lab5.data.exceptions.RedundantArgsException
 import lab5.data.utilities.LanguageManager
 import kotlin.system.exitProcess
 
-class ExitCommand(
+/**
+ * Command does not close any of the instances. Shuts off the program.
+ */
+class Exit(
     private val language: LanguageManager
 ): AbstractCommand(language) {
 
@@ -20,7 +23,7 @@ class ExitCommand(
             execute(arguments)
         } catch (e: RedundantArgsException) {
             println(e.message)
-            if (ProceedCommand(language).safeExecute()) {
+            if (Proceed(language).safeExecute()) {
                 exitProcess(54)
             } else return false
         }

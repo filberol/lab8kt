@@ -1,16 +1,15 @@
 package lab5.bin
 
-
 import lab5.data.annotations.UserEnter
-import lab5.data.utilities.LanguageManager
 import java.util.Scanner
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
-
+/**
+ * Class-reader. Read line while true, form to command execution request.
+ */
 class InteractiveMode(
     private val console: Console,
-    private val lang: LanguageManager,
 ) {
     private val scanner: Scanner = Scanner(System.`in`)
     @UserEnter

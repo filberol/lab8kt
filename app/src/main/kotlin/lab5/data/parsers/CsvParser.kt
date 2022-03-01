@@ -6,7 +6,9 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.FileInputStream
 
-
+/**
+ * Class, reads the collection from file separates by commas, sends arrays to construction.
+ */
 class CsvParser {
     @Throws(IOException::class)
     fun readCollection(path: String): ArrayList<Array<String>> {

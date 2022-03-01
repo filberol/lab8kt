@@ -1,11 +1,15 @@
 package lab5.data.commands
 
+import lab5.data.annotations.ServerCommand
 import lab5.data.exceptions.NotEnoughArgsException
 import lab5.data.utilities.CollectionManager
 import lab5.data.utilities.LanguageManager
 
-
-class RemoveByIDCommand(
+/**
+ * Removes collection element by its ID
+ */
+@ServerCommand
+class RemoveByID(
     private val language: LanguageManager,
     private val collection: CollectionManager
 ): AbstractCommand(language) {

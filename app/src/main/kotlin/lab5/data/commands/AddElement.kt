@@ -10,13 +10,21 @@ import java.time.ZonedDateTime
 import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
-class AddElementCommand(
+/**
+ * Big class with HardCoded elements.
+ * Read input and add to collection or imitate it, adding from file.
+ */
+@ServerCommand
+class AddElement(
     private val language: LanguageManager,
     private val validator: FieldValidator,
     private val builder: ObjectBuilder,
     private val collection: CollectionManager
 ): AbstractCommand(language) {
 
+    /**
+     * Order of fields to be read from file to construct an object.
+     */
     @HardCoded
     private val fieldTable: List<KClass<out Any>> = listOf(
         Int::class,//ID
@@ -33,6 +41,9 @@ class AddElementCommand(
         String::class//LocName
     )
 
+    /**
+     * Constructing object from collection file
+     */
     fun execute(arguments: Array<String>): Boolean {
         val degenerated: ArrayList<Any> = ArrayList()
         try {
@@ -51,8 +62,11 @@ class AddElementCommand(
         return collection.addNotNull(builder.buildObject(degenerated))
     }
 
+    /**
+     * Interactive input mode. Creates another instance of Scanner.
+     */
     fun safeExecute(arguments: ArrayList<String>, id: Int): Boolean {
-        if (arguments.isEmpty() || (arguments.isNotEmpty() && ProceedCommand(language).safeExecute())) {
+        if (arguments.isEmpty() || (arguments.isNotEmpty() && Proceed(language).safeExecute())) {
             try {
                 collection.addNotNull(FieldReader(language, validator, builder)
                         .askFields(when (id) {0 -> collection.getFreeID() else -> id}))

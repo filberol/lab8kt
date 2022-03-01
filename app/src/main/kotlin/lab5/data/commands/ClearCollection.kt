@@ -4,8 +4,10 @@ import lab5.data.exceptions.RedundantArgsException
 import lab5.data.utilities.CollectionManager
 import lab5.data.utilities.LanguageManager
 
-
-class ClearCollectionCommand(
+/**
+ * Delete all the elements from the collection. Does nothing to collection file.
+ */
+class ClearCollection(
     private val language: LanguageManager
 ): AbstractCommand(language) {
 
@@ -14,8 +16,8 @@ class ClearCollectionCommand(
         if (arguments.isNotEmpty()) {
             throw RedundantArgsException(language)
         } else {
-            if (ProceedCommand(language).safeExecute()) {
-                collection.delete()
+            if (Proceed(language).safeExecute()) {
+                collection.delete(collection.getSize()-1)
             }
         }
         return true
@@ -25,8 +27,8 @@ class ClearCollectionCommand(
         try {
             execute(arguments, collection)
         } catch(e: RedundantArgsException) {
-            if (ProceedCommand(language).safeExecute()) {
-                collection.delete()
+            if (Proceed(language).safeExecute()) {
+                collection.delete(collection.getSize()-1)
             }
         }
         return true

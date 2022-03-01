@@ -24,6 +24,10 @@ data class Person(
         return birthday
     }
 
+    fun getLocName(): String {
+        return location.getName()
+    }
+
     @HardCoded
     override fun toString(): String {
         return String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",

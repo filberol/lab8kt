@@ -2,6 +2,10 @@ package lab5.data.utilities
 
 import java.util.*
 
+/**
+ * Class holds ResourceBundle with localisation.
+ * Different languages to be realized.
+ */
 class LanguageManager {
     private var language: ResourceBundle? = null
     init {

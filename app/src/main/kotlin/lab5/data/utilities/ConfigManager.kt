@@ -6,6 +6,10 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Properties
 
+/**
+ * Class stores the config for client, saved in file.
+ * Supports common values.
+ */
 class ConfigManager(private val language: LanguageManager) {
     private var config: Properties = Properties()
     init {
@@ -42,5 +46,8 @@ class ConfigManager(private val language: LanguageManager) {
     }
     fun setDataPath(path: String) {
         config["CollectionPath"] = path
+    }
+    fun getLogU(): Boolean {
+        return config.getProperty("HistoryLogUnknown").toBoolean()
     }
 }

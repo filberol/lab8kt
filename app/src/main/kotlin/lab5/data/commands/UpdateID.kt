@@ -1,12 +1,18 @@
 package lab5.data.commands
 
+import lab5.data.annotations.ServerCommand
 import lab5.data.exceptions.NotEnoughArgsException
 import lab5.data.utilities.CollectionManager
 import lab5.data.utilities.FieldValidator
 import lab5.data.utilities.LanguageManager
 import lab5.data.utilities.ObjectBuilder
 
-class UpdateIDCommand(
+/**
+ * Command updates the element under the specified ID.
+ * Actually is an add and delete combination, so updating empty id creates an element.
+ */
+@ServerCommand
+class UpdateID(
     private val language: LanguageManager,
     private val validator: FieldValidator,
     private val builder: ObjectBuilder,
@@ -16,9 +22,9 @@ class UpdateIDCommand(
     fun execute(arguments: ArrayList<String>): Boolean {
         if (arguments[0] != "id") throw NotEnoughArgsException(language)
         val id = arguments[1].toInt()
-        if (AddElementCommand(language, validator, builder, collection).safeExecute(ArrayList(), id)) {
+        if (AddElement(language, validator, builder, collection).safeExecute(ArrayList(), id)) {
             arguments.removeAt(0)
-            RemoveByIDCommand(language, collection).execute(arguments)
+            RemoveByID(language, collection).execute(arguments)
         } else {
             println("cannot add")
         }

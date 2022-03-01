@@ -5,6 +5,10 @@ import java.util.Calendar
 import kotlin.collections.ArrayList
 import kotlin.math.max
 
+/**
+ * Class-history handler. Stores command, prints them.
+ * Can be used to make logs.
+ */
 class HistoryManager(
     conf: ConfigManager,
     private val lang: LanguageManager

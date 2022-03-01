@@ -1,13 +1,18 @@
 package lab5.bin
 
 import lab5.data.annotations.FileReader
+import lab5.data.utilities.LanguageManager
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 
+/**
+ * Class-reader. Read through the file and transform it to "interactive-like" input.
+ */
 class ScriptMode(
-    private val console: Console
+    private val console: Console,
+    private val language: LanguageManager
 ) {
     @FileReader
     fun readFile(path: String): Boolean {
@@ -21,13 +26,23 @@ class ScriptMode(
         }
         input.close()
         val lines = line.toString().split("\n")
-        for (commandLine in lines) {
-            val commandFeed = ArrayList<String>(commandLine.split(" "))
-            val command = commandFeed[0]
-            commandFeed.removeAll(listOf(""))
-            commandFeed.removeAt(0)
-            console.eatCommand(command, commandFeed)
+        if (!scriptSet.contains(path)) {
+            scriptSet.add(path)
+            for (commandLine in lines) {
+                val commandFeed = ArrayList<String>(commandLine.split(" "))
+                commandFeed.removeAll(listOf(""))
+                if (commandFeed.size != 0) {
+                    val command = commandFeed[0]
+                    commandFeed.removeAt(0)
+                    console.eatCommand(command, commandFeed)
+                }
+            }
+        } else {
+            println(language.getString("LoopExecuteException"))
         }
         return true
+    }
+    companion object ExecutingScripts {
+        private var scriptSet: HashSet<String> = HashSet()
     }
 }

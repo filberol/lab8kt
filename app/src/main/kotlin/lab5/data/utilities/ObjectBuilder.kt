@@ -4,6 +4,10 @@ import lab5.data.objects.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
+/**
+ * Simple class to construct and return object.
+ * All the fields should be parsed and validated by the moment it is used.
+ */
 class ObjectBuilder {
     fun buildObject(l: ArrayList<Any>): Person {
         return Person(

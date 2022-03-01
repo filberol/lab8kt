@@ -8,6 +8,10 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 import kotlin.reflect.KClass
 
+/**
+ * Class stores the values and their methods to parse.
+ * Validates the fields by throwing exceptions.
+ */
 class FieldValidator {
     private val table: HashMap<KClass<out Any>, (String) -> Any> = hashMapOf(
         Int::class to {x: String -> x.toInt()},

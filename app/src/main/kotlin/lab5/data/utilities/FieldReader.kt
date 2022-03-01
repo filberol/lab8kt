@@ -2,17 +2,16 @@ package lab5.data.utilities
 
 import lab5.data.annotations.HardCoded
 import lab5.data.annotations.UserEnter
-import lab5.data.exceptions.ExecuteException
-import lab5.data.objects.EyeColor
-import lab5.data.objects.HairColor
-import lab5.data.objects.Person
+import lab5.data.objects.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.*
-import java.util.concurrent.ExecutionException
+import java.util.Scanner
 import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
+/**
+ * Class holds fields to ask from user to construct the object.
+ */
 class FieldReader(
     private val language: LanguageManager,
     private val validator: FieldValidator,
@@ -22,6 +21,9 @@ class FieldReader(
     private val degenerated: ArrayList<Any> = ArrayList()
     private val scanner = Scanner(System.`in`)
 
+    /**
+     * Automated fields order
+     */
     @HardCoded
     private val userFieldTable: List<KClass<out Any>> = listOf(
         String::class,//Name

@@ -1,50 +1,18 @@
 package lab5.data.utilities
 
-import lab5.data.annotations.FileReader
-import lab5.data.annotations.HardCoded
-import lab5.data.commands.AddElementCommand
-import lab5.data.exceptions.FullCollectionException
-import lab5.data.objects.*
-import lab5.data.parsers.CsvParser
-import java.io.FileNotFoundException
-import java.io.IOException
 
+import lab5.data.exceptions.FullCollectionException
+import lab5.data.objects.Person
+import java.time.LocalDate
+
+/**
+ * Class-handler. Stores the collection and provides basic commands for them.
+ */
 class CollectionManager(
     private val language: LanguageManager,
-    private val validator: FieldValidator,
-    private val builder: ObjectBuilder
     ) {
     private var collection: ArrayDeque<Person> = ArrayDeque()
     private var ids: HashSet<Int> = HashSet()
-
-    fun safeLoad(path: String): Boolean {
-        try {
-            loadCollection(path)
-        } catch (e: FileNotFoundException) {
-            println(path + language.getString("DataFileNotFound"))
-        } catch (e: SecurityException) {
-            println(path + language.getString("DataNoAccess"))
-        } catch (e: IOException) {
-            println(path + language.getString("DataIOError"))
-        }
-        return true
-    }
-
-    @FileReader
-    @Throws(IOException::class)
-    fun loadCollection(path: String): Boolean {
-        println(language.getString("CollectionLoad"))
-        val serializedCollection: ArrayList<Array<String>> = CsvParser().readCollection(path)
-
-        for (element: Array<String> in serializedCollection) {
-            @HardCoded
-            if (element.size == 12) {
-                AddElementCommand(language, validator, builder, this).execute(element)
-            }
-        }
-        System.out.printf(language.getString("LoadCount") + "\n", collection.size)
-        return true
-    }
 
     fun serialize(): ArrayList<String> {
         val serialized: ArrayList<String> = ArrayList()
@@ -83,9 +51,17 @@ class CollectionManager(
         return false
     }
 
-    fun sortWith(comparator: Comparator<Person>): Boolean {
+    fun getIndexBy(birthday: LocalDate): Int? {
+        for (person in collection) {
+            if (person.getBirthday() == birthday)
+                return collection.indexOf(person)-1
+        }
+        return null
+    }
+
+    fun sortWith(comparator: Comparator<Person>): CollectionManager {
         collection.sortWith(comparator)
-        return true
+        return this
     }
 
     fun printCollection(int: Int): Boolean {
@@ -109,7 +85,11 @@ class CollectionManager(
         return true
     }
 
-    fun delete(): Boolean {
+    fun delete(int: Int): Boolean {
+        for (i in 0..int) {
+            deleteElement(0)
+        }
+        println(language.getString("Done"))
         return true
     }
 }

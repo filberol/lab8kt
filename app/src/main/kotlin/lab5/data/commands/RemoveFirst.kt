@@ -1,11 +1,16 @@
 package lab5.data.commands
 
+import lab5.data.annotations.ServerCommand
 import lab5.data.exceptions.RedundantArgsException
 import lab5.data.objects.Person
 import lab5.data.utilities.CollectionManager
 import lab5.data.utilities.LanguageManager
 
-class RemoveFirstCommand(
+/**
+ * Removes the first element in the collection with possibly no sorting.
+ */
+@ServerCommand
+class RemoveFirst(
     private val language: LanguageManager,
     private val collection: CollectionManager
 ): AbstractCommand(language) {
@@ -24,7 +29,7 @@ class RemoveFirstCommand(
             execute(arguments, comparator)
         } catch (e: RedundantArgsException) {
             println(e.message)
-            if (ProceedCommand(language).safeExecute()) {
+            if (Proceed(language).safeExecute()) {
                 collection.sortWith(comparator)
                 collection.deleteElement(0)
                 println(language.getString("Done"))

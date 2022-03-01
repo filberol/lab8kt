@@ -7,7 +7,10 @@ import lab5.data.utilities.LanguageManager
 import java.io.FileNotFoundException
 import java.io.IOException
 
-class SaveCollectionCommand(
+/**
+ * Command saves the collection to file, from where the collection ws loaded.
+ */
+class SaveCollection(
     private val language: LanguageManager,
     private val collection: CollectionManager
 ): AbstractCommand(language) {
@@ -19,7 +22,7 @@ class SaveCollectionCommand(
     }
 
     fun safeExecute(path: String, arguments: ArrayList<String>): Boolean {
-        if (arguments.isEmpty() || (arguments.isNotEmpty() && ProceedCommand(language).safeExecute())) {
+        if (arguments.isEmpty() || (arguments.isNotEmpty() && Proceed(language).safeExecute())) {
             try {
                 execute(path, collection.serialize())
                 println(language.getString("Done"))

@@ -6,17 +6,25 @@ import lab5.data.utilities.LanguageManager
 import java.io.FileNotFoundException
 import java.io.IOException
 
-class ExecuteScriptCommand(
+/**
+ * Commands in ScriptMode are the same as user input.
+ * Executes not in the Silent mode.
+ */
+class ExecuteScript(
     private val language: LanguageManager,
     private val console: Console
 ): AbstractCommand(language) {
+    /**
+     * Creates a new instance of ScriptMode for each script file.
+     * Uses existing instance of the Console.
+     */
     fun execute(path: String): Boolean {
-        ScriptMode(console).readFile(path)
+        ScriptMode(console, language).readFile(path)
         return true
     }
 
     fun safeExecute(arguments: ArrayList<String>): Boolean {
-        if (arguments.isEmpty()) {
+        if (arguments.isNotEmpty()) {
             for (path in arguments) {
                 try {
                     execute(path)
@@ -28,7 +36,7 @@ class ExecuteScriptCommand(
                     println(path + language.getString("DataIOError"))
                 }
             }
-        } else println(language.getString("TooManyArgsException"))
+        } else println(language.getString("NotEnoughArgsException"))
         return true
     }
 }

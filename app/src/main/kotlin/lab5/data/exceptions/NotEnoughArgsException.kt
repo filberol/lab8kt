@@ -5,5 +5,4 @@ import java.io.IOException
 
 class NotEnoughArgsException(
     lang: LanguageManager
-): IOException(lang.getString("TooManyArgsException")){
-}
+): IOException(lang.getString("NotEnoughArgsException"))
