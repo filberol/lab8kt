@@ -9,6 +9,7 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
+import org.apache.commons.csv.CSVRecord
 
 /**
  * Big class with HardCoded elements.
@@ -44,19 +45,19 @@ class AddElement(
     /**
      * Constructing object from collection file
      */
-    fun execute(arguments: Array<String>): Boolean {
+    fun addFromRecord(record: CSVRecord): Boolean {
         val degenerated: ArrayList<Any> = ArrayList()
         try {
             for (i in 0..11) {
                 try {
-                    degenerated.add(validator.parseField(arguments[i], fieldTable[i])!!)
+                    degenerated.add(validator.parseField(record.get(i), fieldTable[i])!!)
                 } catch (e: Exception) {
-                    System.out.printf(language.getString("ParseException") + "\n", arguments[i])
+                    System.out.printf(language getString "ParseException" + "\n", record.get(i))
                     return false
                 }
             }
         } catch (e: IndexOutOfBoundsException) {
-        println(language.getString("ParseException2"))
+        println(language getString "ParseException2")
         return false
     }
         return collection.addNotNull(builder.buildObject(degenerated))
@@ -65,8 +66,8 @@ class AddElement(
     /**
      * Interactive input mode. Creates another instance of Scanner.
      */
-    fun safeExecute(arguments: ArrayList<String>, id: Int): Boolean {
-        if (arguments.isEmpty() || (arguments.isNotEmpty() && Proceed(language).safeExecute())) {
+    fun interactiveAdd(arguments: ArrayList<String>, id: Int): Boolean {
+        if (arguments.isEmpty() || (arguments.isNotEmpty() && Proceed(language).execute())) {
             try {
                 collection.addNotNull(FieldReader(language, validator, builder)
                         .askFields(when (id) {0 -> collection.getFreeID() else -> id}))

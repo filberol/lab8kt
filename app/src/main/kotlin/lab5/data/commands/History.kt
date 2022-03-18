@@ -1,6 +1,5 @@
 package lab5.data.commands
 
-import lab5.data.exceptions.RedundantArgsException
 import lab5.data.utilities.HistoryManager
 import lab5.data.utilities.LanguageManager
 
@@ -11,28 +10,9 @@ import lab5.data.utilities.LanguageManager
 class History(
     private val language: LanguageManager
 ): AbstractCommand(language) {
-
-    @Throws(RedundantArgsException::class)
-    private fun execute(arguments: ArrayList<String>
-                        , history: HistoryManager): Boolean {
-        if (arguments.isNotEmpty()) {
-            throw RedundantArgsException(language)
-        } else {
+    fun execute(arguments: ArrayList<String>, history: HistoryManager) {
+        if (arguments.isEmpty() || (arguments.isNotEmpty() && Proceed(language).execute())) {
             history.printHistory()
         }
-        return true
-    }
-
-    fun safeExecute(arguments: ArrayList<String>
-                    , history: HistoryManager): Boolean {
-        try {
-            execute(arguments, history)
-        } catch (e: RedundantArgsException) {
-            println(e.message)
-            if (Proceed(language).safeExecute()) {
-                history.printHistory()
-            } else return false
-        }
-        return true
     }
 }

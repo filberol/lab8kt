@@ -1,4 +1,4 @@
-package lab5.bin
+package lab5.run
 
 import lab5.data.annotations.UserEnter
 import java.util.Scanner

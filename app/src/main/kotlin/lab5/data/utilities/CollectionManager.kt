@@ -4,6 +4,7 @@ package lab5.data.utilities
 import lab5.data.exceptions.FullCollectionException
 import lab5.data.objects.Person
 import java.time.LocalDate
+import java.util.stream.Stream
 
 /**
  * Class-handler. Stores the collection and provides basic commands for them.
@@ -14,23 +15,21 @@ class CollectionManager(
     private var collection: ArrayDeque<Person> = ArrayDeque()
     private var ids: HashSet<Int> = HashSet()
 
-    fun serialize(): ArrayList<String> {
-        val serialized: ArrayList<String> = ArrayList()
-        collection.mapTo(serialized) {it.serialize()}
-        return serialized
-    }
+    //Serialize - - - - - - - - - - - - - - - - - - - - - - -
+    fun getSerializedStream(): Stream<List<String>> = collection.map {it.serialize()}.stream()
 
+    //Add - - - - - - - - - - - - - - - - - - -
     fun addNotNull(element: Person?): Boolean {
         if (element != null) {
             ids.add(element.getID())
             collection.add(element)
+            return true
         }
-        return true
+        return false
     }
 
-    fun getSize(): Int {
-        return collection.size
-    }
+    //Find - - - - - - - - - - - - - - - - - - - - -
+    fun getSize() = collection.size
 
     fun getFreeID(): Int {
         for (id in 1..Int.MAX_VALUE) {
@@ -41,16 +40,6 @@ class CollectionManager(
         throw FullCollectionException(language)
     }
 
-    fun deleteByID(id: Int): Boolean {
-        for(person in collection) {
-            if (person.getID() == id) {
-                collection.remove(person)
-                return true
-            }
-        }
-        return false
-    }
-
     fun getIndexBy(birthday: LocalDate): Int? {
         for (person in collection) {
             if (person.getBirthday() == birthday)
@@ -59,6 +48,7 @@ class CollectionManager(
         return null
     }
 
+    //Sort, print - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     fun sortWith(comparator: Comparator<Person>): CollectionManager {
         collection.sortWith(comparator)
         return this
@@ -80,14 +70,22 @@ class CollectionManager(
         return true
     }
 
-    fun deleteElement(index: Int): Boolean {
-        collection.removeAt(index)
-        return true
+    //Delete - - - - - - - - - - - - - - - - - -
+    fun deleteByID(id: Int): Boolean {
+        for(person in collection) {
+            if (person.getID() == id) {
+                collection.remove(person)
+                return true
+            }
+        }
+        return false
     }
+
+    fun deleteByPosition(index: Int) = collection.removeAt(index)
 
     fun delete(int: Int): Boolean {
         for (i in 0..int) {
-            deleteElement(0)
+            deleteByPosition(0)
         }
         println(language.getString("Done"))
         return true

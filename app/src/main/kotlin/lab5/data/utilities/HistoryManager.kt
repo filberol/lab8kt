@@ -19,7 +19,7 @@ class HistoryManager(
     init {
         try {
             historyLength = Integer.valueOf(conf.getString("HistoryLength"))
-        } catch (e: NumberFormatException) {}
+        } catch (_: NumberFormatException) {}
         historyLogUnknown = conf.getString("HistoryLogUnknown").toBoolean()
     }
 

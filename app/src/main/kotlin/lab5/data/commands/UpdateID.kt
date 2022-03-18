@@ -1,7 +1,6 @@
 package lab5.data.commands
 
 import lab5.data.annotations.ServerCommand
-import lab5.data.exceptions.NotEnoughArgsException
 import lab5.data.utilities.CollectionManager
 import lab5.data.utilities.FieldValidator
 import lab5.data.utilities.LanguageManager
@@ -18,26 +17,20 @@ class UpdateID(
     private val builder: ObjectBuilder,
     private val collection: CollectionManager
 ): AbstractCommand(language) {
-
-    fun execute(arguments: ArrayList<String>): Boolean {
-        if (arguments[0] != "id") throw NotEnoughArgsException(language)
-        val id = arguments[1].toInt()
-        if (AddElement(language, validator, builder, collection).safeExecute(ArrayList(), id)) {
-            arguments.removeAt(0)
-            RemoveByID(language, collection).execute(arguments)
+    /**
+     * Due to the add and removal methods, removing the same ID after adding one causes it to update.
+     */
+    fun execute(arguments: ArrayList<String>){
+        if (arguments[0] == "id") {
+            val id = arguments[1].toInt()
+            if (AddElement(language, validator, builder, collection).interactiveAdd(ArrayList(), id)) {
+                arguments.removeAt(0)
+                RemoveByID(language, collection).execute(arguments)
+            } else {
+                println(language getString "CannotUpdate")
+            }
         } else {
-            println("cannot add")
+            println(language getString "NotEnoughArgs")
         }
-        return true
-    }
-
-    fun safeExecute(arguments: ArrayList<String>): Boolean {
-        try {
-            execute(arguments)
-        } catch (e: Exception) {
-            println(e.message)
-            return false
-        }
-        return true
     }
 }

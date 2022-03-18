@@ -1,6 +1,5 @@
-package lab5.bin
+package lab5.run
 
-import lab5.data.annotations.FileReader
 import lab5.data.utilities.LanguageManager
 import java.io.File
 import java.io.FileInputStream
@@ -14,7 +13,7 @@ class ScriptMode(
     private val console: Console,
     private val language: LanguageManager
 ) {
-    @FileReader
+
     fun readFile(path: String): Boolean {
         val scriptFile = File(path)
         val inputStream: InputStream = FileInputStream(scriptFile)
@@ -38,7 +37,7 @@ class ScriptMode(
                 }
             }
         } else {
-            println(language.getString("LoopExecuteException"))
+            println(language.getString("LoopExecute"))
         }
         return true
     }

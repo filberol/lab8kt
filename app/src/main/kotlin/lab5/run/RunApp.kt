@@ -1,10 +1,10 @@
-package lab5.bin
+package lab5.run
 
 import lab5.data.utilities.*
 
 /**
  * @author filberol Inc.
- * @version alpha 0.5.1
+ * @version alpha 0.5.3
  */
 fun main(args: Array<String>) {
     //Loading language pack
@@ -19,11 +19,11 @@ fun main(args: Array<String>) {
     val comparator = PersonComparator()
     //Loading Collection
     val collection = CollectionManager(language)
-    val collectionLoader = CollectionLoader(language, validator, builder, collection)
+    val fileManager = CollectionFileManager(language, validator, builder, collection)
     if (args.isNotEmpty()) config.setDataPath(args[0])
-    collectionLoader.safeLoad(config.getDataPath())
+    fileManager.execute("load", config.getDataPath())
     //Initializing Shell
-    val console = Console(history, language, collection, config, comparator, validator, builder)
+    val console = Console(history, language, collection, fileManager, config, comparator, validator, builder)
     //Starting interactive mode
     val userScript = InteractiveMode(console)
     while (true) {

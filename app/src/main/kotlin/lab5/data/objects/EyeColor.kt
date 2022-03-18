@@ -7,9 +7,7 @@ enum class EyeColor(private val color: String) {
     ORANGE("Orange"),
     BROWN("Brown");
 
-    override fun toString(): String {
-        return this.color
-    }
+    override fun toString() = color
 
     companion object Parser {
         fun parse(x: String): EyeColor {

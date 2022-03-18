@@ -23,7 +23,7 @@ class ConfigManager(private val language: LanguageManager) {
         } catch (e: IOException) {
             println(language.getString("ConfigError"))
         }
-        initialize()
+        changeLanguage(config.getProperty("Language"))
     }
     private fun setDefaults() {
         config["Language"] = "en"
@@ -33,21 +33,9 @@ class ConfigManager(private val language: LanguageManager) {
         config["HistoryLogUnknown"] = "false"
         config["CollectionPath"] = "./app/src/main/resources/"
     }
-    private fun initialize() {
-        if (config.contains("Language")) {
-            language.setLanguage(config.getProperty("Language"))
-        }
-    }
-    fun getString(arg: String): String {
-        return config.getProperty(arg)
-    }
-    fun getDataPath(): String {
-        return (config.getProperty("CollectionPath") + "collection.csv")
-    }
-    fun setDataPath(path: String) {
-        config["CollectionPath"] = path
-    }
-    fun getLogU(): Boolean {
-        return config.getProperty("HistoryLogUnknown").toBoolean()
-    }
+    private fun changeLanguage(lang: String) {language.setLanguage(lang)}
+    fun getString(arg: String): String = config.getProperty(arg)
+    fun getDataPath() = config.getProperty("CollectionPath") + "collection.csv"
+    fun setDataPath(path: String) {config["CollectionPath"] = path}
+    fun getLogU() = config.getProperty("HistoryLogUnknown").toBoolean()
 }

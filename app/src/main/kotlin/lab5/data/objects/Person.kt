@@ -15,29 +15,18 @@ data class Person(
     private val hairColor: HairColor,
     private val location: Location
     ) {
-
-    fun getID(): Int {
-        return id
-    }
-
-    fun getBirthday(): LocalDate {
-        return birthday
-    }
-
-    fun getLocName(): String {
-        return location.getName()
-    }
+    fun getID() = id
+    fun getBirthday() = birthday
+    fun getLocName() = location.getName()
 
     @HardCoded
-    override fun toString(): String {
-        return String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
+    override fun toString() = String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
             id, name, coordinates.toString(), creationDate, height, birthday.toString(),
             eyeColor.toString(), hairColor.toString(), location.toString())
-    }
+
     @HardCoded
-    fun serialize(): String {
-        return String.format("%d,%s,%s,%s,%d,%s,%s,%s,%s",
-            id, name, coordinates.serialize(), creationDate.toString(), height,
-            birthday.toString(), eyeColor.toString(), hairColor.toString(), location.serialize())
-    }
+    fun serialize() = listOf(
+            id.toString(), name, coordinates.getX(), coordinates.getY(), creationDate.toString(),
+            height.toString(), birthday.toString(), eyeColor.toString(), hairColor.toString(),
+            location.getX(), location.getY(), location.getName())
 }

@@ -7,11 +7,8 @@ data class Coordinates(
     private val y: Int = 0
 ) {
     @HardCoded
-    override fun toString(): String {
-        return String.format("%3.2f %6d", x, y)
-    }
-    @HardCoded
-    fun serialize(): String {
-        return String.format("%s,%d", x.toString().replace(",","."), y)
-    }
+    override fun toString() = String.format("%3.2f %6d", x, y)
+
+    fun getX() = x.toString()
+    fun getY() = y.toString()
 }

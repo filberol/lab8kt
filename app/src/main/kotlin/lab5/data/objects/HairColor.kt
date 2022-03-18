@@ -8,9 +8,7 @@ enum class HairColor(private val color: String) {
     YELLOW("Yellow"),
     ORANGE("Orange");
 
-    override fun toString(): String {
-        return this.color
-    }
+    override fun toString() = color
 
     companion object Parser {
         fun parse(x: String): HairColor {

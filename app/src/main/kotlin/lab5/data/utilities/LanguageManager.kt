@@ -20,7 +20,5 @@ class LanguageManager {
         language = ResourceBundle.getBundle("lang/localization", Locale(locale))
     }
 
-    fun getString(s: String): String {
-        return language?.getString(s) ?: String()
-    }
+    infix fun getString(s: String) = language?.getString(s) ?: String()
 }

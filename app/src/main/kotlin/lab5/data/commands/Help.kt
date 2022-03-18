@@ -8,8 +8,9 @@ import lab5.data.utilities.LanguageManager
 class Help(
     private val language: LanguageManager
 ): AbstractCommand(language) {
-    override fun safeExecute(): Boolean{
-        language.getString("CommandList").split("/").forEach(::println)
-        return true
+    fun execute(arguments: ArrayList<String>) {
+        if (arguments.isEmpty() || (arguments.isNotEmpty() && Proceed(language).execute())) {
+            language.getString("CommandList").split("/").forEach(::println)
+        }
     }
 }
