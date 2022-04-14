@@ -11,6 +11,7 @@ import kotlin.reflect.KClass
 
 /**
  * Class holds fields to ask from user to construct the object.
+ * Used for interactive input of the Object.
  */
 class FieldReader(
     private val language: LanguageManager,

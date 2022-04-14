@@ -20,7 +20,7 @@ class Console(
     thread: RunPortThread
 ) {
     init {
-        println(language.getString("Welcome") + "0.5.3 alpha")
+        println(language.getString("Welcome") + "0.5.5 beta")
         println("SERVER      \\|||/")
         println("             (o.o)")
         println("=---------ooO-(_)-Ooo----------=")

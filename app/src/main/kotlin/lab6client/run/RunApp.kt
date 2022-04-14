@@ -6,7 +6,7 @@ import common.entities.User
 
 /**
  * @author filberol Inc.
- * @version alpha 0.5.3
+ * @version alpha 0.5.5
  */
 fun main() {
     //Loading language pack
@@ -31,6 +31,6 @@ fun main() {
     //Starting interactive mode
     val userScript = InteractiveMode(console)
     while (true) {
-        userScript.commandRead()
+        userScript.commandLineRead()
     }
 }

@@ -15,6 +15,11 @@ import java.nio.channels.SocketChannel
 import kotlin.ClassCastException
 import kotlin.system.exitProcess
 
+/**
+ * Class handling the connection to the server.
+ * For client uses stays compact and supports only requests for changing the original collection or refreshing.
+ * Gets as an answer the diff of the server collection and message.
+ */
 class ConnectionHandler(
     private val language: LanguageManager,
     private val user: User,
@@ -34,6 +39,9 @@ class ConnectionHandler(
 
     fun getUser() = user
 
+    /**
+     * Sets the connection with server, providing timeout and first download.
+     */
     fun tryToConnect(): Boolean {
         if (attempts > 0) {
             println(language.getString("Reconnecting"))
@@ -64,9 +72,13 @@ class ConnectionHandler(
         return false
     }
 
+    /**
+     * Sends single request and goto multiple answers from server.
+     */
     fun createRequest(req: Request){
         try {
             attempts = 0
+            serverSender.reset()
             serverSender.writeObject(req)
             processAnswer(collection)
         } catch (e: IOException) {
@@ -74,10 +86,14 @@ class ConnectionHandler(
         }
     }
 
+    /**
+     * Answer receive finished by string message.
+     * Until that waits for answer.
+     */
     private fun processAnswer(coll: CollectionManager) {
         try {
-            val answer = serverReceiver.readObject() as Answer?
-            if (answer != null) {
+            val answer = serverReceiver.readObject()
+            if (answer is Answer) {
                 if (answer.action()) {
                     coll.addNotNull(answer.getElement())
                 } else {
@@ -86,7 +102,10 @@ class ConnectionHandler(
                 coll.setVersion(answer.getVersion())
                 user.setToken(answer.getToken())
                 processAnswer(coll)
-            } else return
+            } else {
+                println(language.getString(answer.toString()))
+            }
+            return
         } catch (e: ClassCastException) {
             println(language.getString("NoResponse"))
         } catch (e: IOException) {

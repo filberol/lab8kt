@@ -18,7 +18,7 @@ class Console(
     connection: ConnectionHandler
 ) {
     init {
-        println(language.getString("Welcome") + "0.5.3 alpha")
+        println(language.getString("Welcome") + "0.5.5 beta")
         println("             \\|||/")
         println("             (o.o)")
         println("=---------ooO-(_)-Ooo----------=")

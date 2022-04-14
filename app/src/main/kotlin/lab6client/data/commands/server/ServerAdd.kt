@@ -9,8 +9,8 @@ import common.entities.Request
 import common.objects.Person
 
 /**
- * Big class with HardCoded elements.
- * Read input and add to collection or imitate it, adding from file.
+ * Server command sending add request with null id element to the server.
+ * Invokes processing the answer from the server.
  */
 @ServerCommand
 class ServerAdd(
@@ -19,7 +19,7 @@ class ServerAdd(
     private val connection: ConnectionHandler
 ): AbstractCommand(language) {
 
-    fun execute(element: Person){
+    fun execute(element: Person?){
         try {
             connection.createRequest(Request(connection.getUser(), element, collection.getVersion()))
         } catch (e: UninitializedPropertyAccessException) {

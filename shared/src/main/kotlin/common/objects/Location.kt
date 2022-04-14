@@ -7,7 +7,7 @@ data class Location(
     private val y: Float,
     private val name: String
 ): Serializable {
-    override fun toString(): String {
+    fun toTable(): String {
         return String.format("%3.2f %3.2f | %25s", x, y, name)
     }
     fun getX() = x.toString()

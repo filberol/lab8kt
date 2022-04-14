@@ -5,6 +5,11 @@ import lab6client.data.commands.InteractiveAdd
 import lab6client.run.Console
 import lab6client.server.ConnectionHandler
 
+/**
+ * Data class storing commands.
+ * Invoke commands by their name.
+ * Commands can be executed locally or sent to the server by themselves.
+ */
 data class CommandManager(
     private val history: HistoryManager,
     private val lang: LanguageManager,
@@ -32,7 +37,8 @@ data class CommandManager(
         "print_ascending" to {PrintCollection(lang, collection).execute(arguments,comparator.reverseComparator)},
         "filter_greater_than_birthday" to {Filter(lang, collection).execute(arguments, comparator.reverseComparator)},
         "print_field_descending_location" to {PrintCollection(lang, collection).execute(arguments,comparator.locationComparator)},
-        "help" to {Help(lang).execute(arguments)}
+        "help" to {Help(lang).execute(arguments)},
+        "refresh" to {Refresh(lang, collection, connection).execute(arguments)}
     )
 
     fun eatCommand(command: String, args: ArrayList<String>) {

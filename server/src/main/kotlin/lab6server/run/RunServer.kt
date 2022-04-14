@@ -1,11 +1,12 @@
 package lab6server.run
 
 import lab6server.data.utilities.*
-import lab6server.server.UserHandler
+import lab6server.server.SqlHandler
+import lab6server.server.TokenManager
 
 /**
  * @author filberol Inc.
- * @version alpha 0.5.3
+ * @version alpha 0.5.5
  */
 fun main() {
     //Loading language pack
@@ -15,14 +16,16 @@ fun main() {
     //Creating Object Utils
     val validator = FieldValidator()
     val builder = ObjectBuilder()
+    //Connecting to Database
+    val sql = SqlHandler(language, config)
     //Loading Collection
-    val collection = CollectionManager(language)
+    val collection = CollectionManager(language, sql)
     val fileManager = CollectionFileManager(language, validator, builder, collection)
     fileManager.execute("load", config.getDataPath())
     //Starting Server
-    val users = UserHandler()
-    val thread = RunPortThread(language, collection, users, config)
-    Thread(thread).start()
+    val users = TokenManager()
+    val thread = RunPortThread(language, collection, users, config, sql)
+    Thread(thread, "SocketAcceptor").start()
     //Initializing shell
     val console = Console(language, collection, fileManager, config, validator, builder, thread)
     while (true) {

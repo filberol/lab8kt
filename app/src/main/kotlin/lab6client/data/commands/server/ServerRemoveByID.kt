@@ -8,7 +8,8 @@ import lab6client.server.ConnectionHandler
 import common.entities.Request
 
 /**
- * Removes collection element by its ID
+ * Server command sending remove request with specific id element to the server.
+ * Invokes processing the answer from the server.
  */
 @ServerCommand
 class ServerRemoveByID(

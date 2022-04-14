@@ -47,6 +47,7 @@ class FileAdd(
     fun addFromRecord(record: CSVRecord): Boolean {
         val degenerated: ArrayList<Any> = ArrayList()
         try {
+
             for (i in 0..11) {
                 try {
                     degenerated.add(validator.parseField(record.get(i), fieldTable[i])!!)

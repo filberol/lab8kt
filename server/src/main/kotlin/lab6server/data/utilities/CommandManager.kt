@@ -6,8 +6,9 @@ import lab6server.data.commands.SaveCollection
 import lab6server.run.Console
 import lab6server.run.RunPortThread
 
-
-
+/**
+ * Command manager on server is shortened, but the architecture stays.
+ */
 data class CommandManager(
     private val lang: LanguageManager,
     private val collection: CollectionManager,

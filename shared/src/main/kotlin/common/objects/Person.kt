@@ -20,9 +20,9 @@ data class Person(
     fun getBirthday() = birthday
     fun getLocName() = location.getName()
 
-    override fun toString() = String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
-            id, name, coordinates.toString(), creationDate, height, birthday.toString(),
-            eyeColor.toString(), hairColor.toString(), location.toString())
+    fun toTable() = String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
+            id, name, coordinates.toTable(), creationDate, height, birthday.toString(),
+            eyeColor.toString(), hairColor.toString(), location.toTable())
 
     fun serialize() = listOf(
             id.toString(), name, coordinates.getX(), coordinates.getY(), creationDate.toString(),

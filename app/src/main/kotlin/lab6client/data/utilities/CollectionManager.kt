@@ -5,6 +5,10 @@ import java.time.LocalDate
 
 /**
  * Class-handler. Stores the collection and provides basic commands for them.
+ * On client stores the real collection in ArrayDeque.
+ * Executes local commands e.g. sort, print locally.
+ * Does not hold any external connections with file or web.
+ * Provides only basic functions.
  */
 class CollectionManager(
     private val language: LanguageManager,
@@ -62,7 +66,7 @@ class CollectionManager(
                         language.getString("TabHead") + "\n" +
                         language.getString("MidLine")
             )
-            collection.slice(0..int).forEach(::println)
+            collection.slice(0..int).map { it.toTable() }.forEach(::println)
             println(language.getString("EndLine"))
             System.out.printf(language.getString("Total") + "\n", collection.size)
         } else {
