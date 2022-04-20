@@ -1,5 +1,6 @@
 package lab6server.data.utilities
 
+import lab6server.data.commands.TruncateUsers
 import lab6server.data.commands.Exit
 import lab6server.data.commands.PrintCollection
 import lab6server.data.commands.SaveCollection
@@ -25,6 +26,7 @@ data class CommandManager(
         "exit" to {Exit(lang, thread).execute(arguments)},
         "show" to { PrintCollection(lang, collection).execute(arguments)},
         "save" to { SaveCollection(lang, fileManager).execute(config.getDataPath())},
+        "drop_users" to { TruncateUsers(lang, collection).execute(arguments) }
     )
 
     fun eatCommand(command: String, args: ArrayList<String>) {

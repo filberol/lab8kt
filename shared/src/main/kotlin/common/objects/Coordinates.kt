@@ -8,6 +8,6 @@ data class Coordinates(
 ): Serializable {
     fun toTable() = String.format("%3.2f %6d", x, y)
 
-    fun getX() = x.toString()
-    fun getY() = y.toString()
+    fun getX() = x
+    fun getY() = y
 }

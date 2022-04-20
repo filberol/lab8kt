@@ -20,7 +20,7 @@ class User: Serializable {
         print("Login:")
         login = scanner.nextLine()
         print("Password:")
-        password = encoder.digest(scanner.nextLine().toByteArray()).toString()
+        password = "nk_07%^_VV" + encoder.digest(scanner.nextLine().toByteArray()).toString()
     }
 
     override fun toString(): String {

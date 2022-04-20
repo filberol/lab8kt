@@ -1,5 +1,6 @@
 package lab6server.server
 
+import lab6server.data.utilities.CollectionManager
 import lab6server.data.utilities.ConfigManager
 import lab6server.data.utilities.LanguageManager
 import java.sql.Connection
@@ -14,10 +15,11 @@ import kotlin.system.exitProcess
  */
 class SqlHandler(
     private val language: LanguageManager,
-    private val config: ConfigManager
+    private val config: ConfigManager,
+    collection: CollectionManager
 ) {
     private val dbConnection: Connection by lazy { settleDatabaseConnection() }
-    private val dataManager = SqlDataManager(dbConnection)
+    val dataManager = SqlDataManager(dbConnection, collection)
     val userManager = SqlUserManager(dbConnection)
 
 
@@ -35,10 +37,5 @@ class SqlHandler(
             exitProcess(1)
         }
 
-    }
-
-    companion object Collection {
-        fun popRemoval() {}
-        fun getDiff() {}
     }
 }

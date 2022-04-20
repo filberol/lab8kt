@@ -26,7 +26,9 @@ class ObjectBuilder {
                 l[9] as Float,
                 l[10] as Float,
                 l[11] as String
-            )
+            ),
+            l[12] as String,
+            l[13] as Boolean
         )
     }
 }

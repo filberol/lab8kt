@@ -13,18 +13,21 @@ class InteractiveMode(
 ) {
     private val scanner: Scanner = Scanner(System.`in`)
     @UserEnter
-    fun commandRead(): Boolean {
-        val lineFeed: String
+    fun commandLineRead() {
         try {
-            lineFeed = scanner.nextLine()
+            scanner.nextLine().split(";").forEach { commandRead(it.trim()) }
+        } catch (e: NoSuchElementException) {
+            exitProcess(0)
+        }
+    }
+
+    private fun commandRead(lineFeed: String) {
+        try {
             val commandFeed = ArrayList<String>(lineFeed.split(" "))
-            val command = commandFeed[0]
+            val command = commandFeed[0].trim()
             commandFeed.removeAll(listOf(""))
             commandFeed.removeAt(0)
             console.eatCommand(command, commandFeed)
-        } catch (e: NoSuchElementException) {
-            exitProcess(0)
         } catch (_: IndexOutOfBoundsException) {}
-        return true
     }
 }

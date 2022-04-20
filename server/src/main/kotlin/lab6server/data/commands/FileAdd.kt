@@ -27,18 +27,20 @@ class FileAdd(
      */
     @HardCoded
     private val fieldTable: List<KClass<out Any>> = listOf(
-        Int::class,//ID
-        String::class,//Name
-        Double::class,//CordX
-        Int::class,//CordY
-        ZonedDateTime::class,//Creation
-        Int::class,//Height
-        LocalDate::class,//Birthday
-        EyeColor::class,//Eye Color
-        HairColor::class,//Hair Color
-        Float::class,//CordX
-        Float::class,//CordY
-        String::class//LocName
+        Int::class,             //ID
+        String::class,          //Name
+        Double::class,          //CordX
+        Int::class,             //CordY
+        ZonedDateTime::class,   //Creation
+        Int::class,             //Height
+        LocalDate::class,       //Birthday
+        EyeColor::class,        //Eye Color
+        HairColor::class,       //Hair Color
+        Float::class,           //CordX
+        Float::class,           //CordY
+        String::class,          //LocName
+        String::class,          //Owner
+        Boolean::class          //Action
     )
 
     /**
@@ -48,7 +50,7 @@ class FileAdd(
         val degenerated: ArrayList<Any> = ArrayList()
         try {
 
-            for (i in 0..11) {
+            for (i in 0..13) {
                 try {
                     degenerated.add(validator.parseField(record.get(i), fieldTable[i])!!)
                 } catch (e: Exception) {
@@ -60,6 +62,6 @@ class FileAdd(
         println(language getString "ParseException2")
         return false
     }
-        return collection.addNotNull(builder.buildObject(degenerated))
+        return collection.addToDb(builder.buildObject(degenerated))
     }
 }

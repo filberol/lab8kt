@@ -85,4 +85,6 @@ class CollectionManager(
         }
         return false
     }
+
+    fun clear() {collection.clear()}
 }

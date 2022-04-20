@@ -21,7 +21,7 @@ class Console(
 ) {
     init {
         println(language.getString("Welcome") + "0.5.5 beta")
-        println("SERVER      \\|||/")
+        println("SERVER       \\|||//")
         println("             (o.o)")
         println("=---------ooO-(_)-Ooo----------=")
     }

@@ -4,13 +4,11 @@ import common.objects.Person
 import java.io.Serializable
 
 data class Answer(
-    private val element: Person,
+    private val element: Person?,
     private val token: String,
-    private val collectionVer: Int,
-    private val action: Boolean
+    private val collectionVer: Int
 ): Serializable {
     fun getElement() = element
     fun getToken() = token
-    fun action() = action
     fun getVersion() = collectionVer
 }

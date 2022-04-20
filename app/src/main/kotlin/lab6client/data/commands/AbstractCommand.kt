@@ -1,6 +1,5 @@
 package lab6client.data.commands
 
-import lab6client.data.exceptions.*
 import lab6client.data.utilities.LanguageManager
 
 /**

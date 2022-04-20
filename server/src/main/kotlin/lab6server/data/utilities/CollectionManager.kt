@@ -9,28 +9,27 @@ import java.util.stream.Stream
 /**
  * For server manger would only support add removal and streaming to console or file manager.
  */
-//Автоматическое сохранение по таймеру или переполнению будет реализовано
-//в последующих лабораторных
 class CollectionManager(
     private val language: LanguageManager,
-    private val sql: SqlHandler
+    config: ConfigManager
     ) {
-    private var collection: ArrayList<Pair<Boolean, Person>> = ArrayList()
+    private val sql = SqlHandler(language, config, this)
     private var ids: HashSet<Int> = HashSet()
+    private var collVer: Int = 0
 
     //Add - - - - - - - - - - - - - - - - - - -
-    fun addNotNull(element: Person?): Boolean {
+    fun addToDb(element: Person?): Boolean {
         if (element != null) {
-            //sql.
-            collection.add(Pair(true, element))
             ids.add(element.getID())
-            return true
+            collVer += 1
+            return sql.dataManager.addToDb(element)
         }
         return false
     }
 
     //Find - - - - - - - - - - - - - - - - - - - - -
-    fun getSize() = collection.size
+    fun getVersion() = collVer
+    fun getSql() = sql
 
     fun getFreeID(): Int {
         for (id in 1..Int.MAX_VALUE) {
@@ -43,15 +42,15 @@ class CollectionManager(
 
     //Print - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     fun printCollection(): Boolean {
-        if (collection.isNotEmpty()) {
+        if (ids.isNotEmpty()) {
             println(
                 language.getString("TabHeading") + "\n" +
                         language.getString("TabHead") + "\n" +
                         language.getString("MidLine")
             )
-            collection.stream().map {it.second.toTable()}.forEach(::println)
+            sql.dataManager.streamDiff(0).forEach { println(it.toTable()) }
             println(language.getString("EndLine"))
-            System.out.printf(language.getString("Total") + "\n", collection.size)
+            System.out.printf(language.getString("Total") + "\n", ids.size)
         } else {
             println(language.getString("EmptyCollection"))
         }
@@ -59,44 +58,32 @@ class CollectionManager(
     }
 
     //Delete - - - - - - - - - - - - - - - - - -
-    fun deleteByID(id: Int): Boolean {
-        if (ids.contains(id)) {
-            for (pair in collection) {
-                if (pair.second.getID() == id) {
-                    collection.add(Pair(false, pair.second))
-                    ids.remove(id)
-                    return true
-                }
-            }
+    fun deleteByID(element: Person): Boolean {
+        if (ids.contains(element.getID())) {
+            addToDb(element)
+            ids.remove(element.getID())
         }
         return false
     }
 
     fun fullClearDiff() {
-        collection.clear()
+        collVer = 0
+        sql.dataManager.truncateData()
     }
 
     //Serialize - - - - - - - - - - - - - - - - - - - - - - -
     fun getSerializedStream(): Stream<List<String>> {
         val list = ArrayList<List<String>>()
-        for (i in 0 until collection.size) {
-            if (collection[i].first && !popRemoval(collection[i].second.getID())) {
-                list.add(collection[i].second.serialize())
-            }
+        for (id in ids) {
+            list.add(sql.dataManager.findLastById(id).serialize())
         }
         return list.stream()
     }
 
-    private fun popRemoval(id: Int): Boolean {
-        for (el in collection) {
-            if (!el.first && el.second.getID() == id) return true
-            collection.remove(el)
-        }
-        return false
+    //Stream Diff
+    fun getDiff(ver: Int): Stream<Person> {
+        return sql.dataManager.streamDiff(ver)
     }
 
-    //Stream Diff
-    fun getDiff(ver: Int): Stream<Pair<Boolean, Person>> {
-        return collection.stream().skip(ver.toLong())
-    }
+    fun getDbHandler() = sql
 }

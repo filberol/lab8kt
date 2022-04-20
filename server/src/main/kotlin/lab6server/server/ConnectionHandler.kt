@@ -3,6 +3,7 @@ package lab6server.server
 import lab6server.data.utilities.CollectionManager
 import lab6server.data.utilities.ConfigManager
 import lab6server.data.utilities.LanguageManager
+import lab6server.data.utilities.TokenManager
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -19,7 +20,6 @@ class ConnectionHandler(
     private val language: LanguageManager,
     private val collection: CollectionManager,
     private val users: TokenManager,
-    private val sqlHandler: SqlHandler,
     config: ConfigManager
 ) {
     private val port: Int = config.getPort()
@@ -54,7 +54,7 @@ class ConnectionHandler(
             val clientSocket: Socket = socket.accept()
             receiver = ObjectInputStream(clientSocket.getInputStream())
             sender = ObjectOutputStream(clientSocket.getOutputStream())
-            Thread(ProcessRequestThread(collection, language, users, receiver, sender, sqlHandler)).start()
+            Thread(ProcessRequestThread(collection, language, users, receiver, sender)).start()
         } catch (e: IOException) {
             println(language.getString("SocketAccept"))
         } catch (e: SecurityException) {

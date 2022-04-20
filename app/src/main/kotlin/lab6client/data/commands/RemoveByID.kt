@@ -18,7 +18,6 @@ class RemoveByID(
     fun execute(arguments: ArrayList<String>) {
         try {
             ServerRemoveByID(language, collection, connection).execute(arguments[0].toInt())
-            println(language.getString("Done"))
         } catch (e: NumberFormatException) {
             println(language.getString("NotEnoughArgs"))
         } catch (e: ArrayIndexOutOfBoundsException) {

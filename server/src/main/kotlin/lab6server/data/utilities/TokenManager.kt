@@ -1,4 +1,4 @@
-package lab6server.server
+package lab6server.data.utilities
 
 import kotlin.random.Random
 

@@ -40,8 +40,9 @@ class CollectionFileManager(
         val file = FileReader(path)
         val parser = CSVParser(file, CSVFormat.DEFAULT.withTrim())
         collection.fullClearDiff()
+        val command = FileAdd(language, validator, builder, collection)
         for (record in parser) {
-            FileAdd(language, validator, builder, collection).addFromRecord(record)
+            command.addFromRecord(record)
         }
     }
 

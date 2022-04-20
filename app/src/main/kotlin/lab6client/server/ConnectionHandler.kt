@@ -93,15 +93,25 @@ class ConnectionHandler(
     private fun processAnswer(coll: CollectionManager) {
         try {
             val answer = serverReceiver.readObject()
+            //Check thr answer validity
             if (answer is Answer) {
-                if (answer.action()) {
-                    coll.addNotNull(answer.getElement())
-                } else {
-                    coll.deleteByID(answer.getElement().getID())
+                //Check if usual answer
+                if (answer.getElement() != null) {
+                    //Add or delete element
+                    if (answer.getElement()!!.getAction()) {
+                        coll.addNotNull(answer.getElement())
+                    } else {
+                        coll.deleteByID(answer.getElement()!!.getID())
+                    }
+                    coll.setVersion(answer.getVersion())
+                    user.setToken(answer.getToken())
+                    processAnswer(coll)
+                //Opening clear command for invalid token
+                } else if (answer.getVersion() < 0) {
+                    collection.clear()
+                    processAnswer(coll)
                 }
-                coll.setVersion(answer.getVersion())
-                user.setToken(answer.getToken())
-                processAnswer(coll)
+            //Closing string answer
             } else {
                 println(language.getString(answer.toString()))
             }

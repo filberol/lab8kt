@@ -20,6 +20,7 @@ class ServerRemoveByID(
     fun execute(id: Int) {
         try {
             val element = collection.getByID(id)!!
+            element.setAction(false)
             connection.createRequest(Request(connection.getUser(), element, collection.getVersion()))
         } catch (e: NullPointerException) {
             println(language.getString("EmptySearch"))

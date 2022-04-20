@@ -6,6 +6,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import common.entities.Request
 import common.entities.Answer
+import lab6server.data.utilities.TokenManager
 import java.io.EOFException
 import java.net.SocketException
 
@@ -18,8 +19,7 @@ class ProcessRequestThread(
     private val language: LanguageManager,
     private val tokens: TokenManager,
     private val receiver: ObjectInputStream,
-    private val sender: ObjectOutputStream,
-    private val sqlHandler: SqlHandler
+    private val sender: ObjectOutputStream
 ): Runnable {
     private var active = true
 
@@ -36,18 +36,17 @@ class ProcessRequestThread(
             //Action logic
 
             //CheckUser
-            if (sqlHandler.userManager.checkAddUser(req.getUser())) {
+            if (collection.getSql().userManager.checkAddUser(req.getUser())) {
                 //Add or delete element
-                if (req.geElement() != null) {
+                val contain = req.geElement()
+                if (contain != null) {
                     //Add if id = 0
-                    if (req.geElement()!!.getID() == 0) {
-                        val element = req.geElement()
-                        element!!.setID(collection.getFreeID())
-                        collection.addNotNull(element)
+                    if (contain.getID() == 0) {
+                        contain.setID(collection.getFreeID())
+                        collection.addToDb(contain)
                     //Delete if id !=0
                     } else {
-                        val id = req.geElement()!!.getID()
-                        collection.deleteByID(id)
+                        collection.deleteByID(contain)
                     }
                 }
                 //Common answer
@@ -56,7 +55,7 @@ class ProcessRequestThread(
                 if (tokens.checkPopToken(req.getUser().getToken())) {
                     giveAnswer(req.getVer(), "Done")
                 } else {
-                    giveAnswer(req.getVer(), "SucAcc")
+                    giveAnswer(0, "SucAcc", true)
                 }
             } else {
                 //Create Account automatically
@@ -73,9 +72,11 @@ class ProcessRequestThread(
         }
     }
 
-    private fun giveAnswer(collVer: Int, res: String) {
+    private fun giveAnswer(collVer: Int, res: String, truncate: Boolean = false) {
+        if (truncate) sender.writeObject(Answer(null, tokens.generateAddToken(),
+            -1))
         collection.getDiff(collVer).map {
-            Answer(it.second, tokens.generateAddToken(), collection.getSize(), it.first)
+            Answer(it, tokens.generateAddToken(), collection.getVersion())
         }.forEach(sender::writeObject)
         sender.writeObject(res)
 

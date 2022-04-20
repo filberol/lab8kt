@@ -13,25 +13,24 @@ class SqlUserManager(
      * Check and if not exists add user.
      */
     fun checkAddUser(user: User): Boolean {
-        val stat = connection.createStatement()
-        val query = "SELECT COUNT(*) FROM users WHERE username = '${user.getLogin()}' AND password = '${user.getPass()}';"
-        val res = stat.executeQuery(query)
+        val query = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ?;"
+        val stat = connection.prepareStatement(query)
+        stat.setString(1, user.getLogin())
+        stat.setString(2, user.getPass())
+        val res = stat.executeQuery()
         res.next()
         println("users found " + res.getInt("count"))
-        if (res.getInt("count") == 1) {
-            stat.close()
-            res.close()
-            return true
-        } else {
-
-            val addSt = "INSERT INTO users VALUES ('${user.getLogin()}', '${user.getPass()}');"
-            stat.execute(addSt)
+        return if (res.getInt("count") == 1) true else {
+            val addString = "INSERT INTO users VALUES (?, ?);"
+            val addStat = connection.prepareStatement(addString)
+            addStat.setString(1, user.getLogin())
+            addStat.setString(2, user.getPass())
+            addStat.execute()
+            false
         }
-        return false
     }
 
-    fun dropUsers() {
-        val stat = connection.createStatement()
-        stat.execute("DROP TABLE users")
+    fun truncateUsers() {
+        connection.createStatement().execute("TRUNCATE TABLE users;")
     }
 }
