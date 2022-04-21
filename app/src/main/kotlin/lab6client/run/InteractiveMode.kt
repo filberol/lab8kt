@@ -1,5 +1,6 @@
 package lab6client.run
 
+import common.entities.User
 import lab6client.data.annotations.UserEnter
 import java.util.Scanner
 import kotlin.collections.ArrayList
@@ -10,11 +11,13 @@ import kotlin.system.exitProcess
  */
 class InteractiveMode(
     private val console: Console,
+    private val user: User
 ) {
     private val scanner: Scanner = Scanner(System.`in`)
     @UserEnter
     fun commandLineRead() {
         try {
+            print("${user.getLogin()}>")
             scanner.nextLine().split(";").forEach { commandRead(it.trim()) }
         } catch (e: NoSuchElementException) {
             exitProcess(0)

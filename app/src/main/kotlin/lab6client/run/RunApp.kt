@@ -25,12 +25,27 @@ fun main() {
     val user = User()
     user.setVars()
     val connection = ConnectionHandler(language, user, collection, config)
-    connection.tryToConnect()
+    val connThread = Thread(connection)
+    connThread.start()
     //Initializing Shell
     val console = Console(history, language, collection, config, comparator, validator, builder, connection)
-    //Starting interactive mode
-    val userScript = InteractiveMode(console)
-    while (true) {
-        userScript.commandLineRead()
+    //Checking connection
+    Thread.sleep(1000)
+    if (connThread.isAlive) {
+        if (connection.isConnected()) {
+            println(language.getString("Queue"))
+            //Starting interactive mode
+            val userScript = InteractiveMode(console, user)
+            while (true) {
+                userScript.commandLineRead()
+            }
+        }
+    } else {
+        //Starting interactive mode
+        val userScript = InteractiveMode(console, user)
+        while (true) {
+            userScript.commandLineRead()
+        }
     }
+
 }

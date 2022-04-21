@@ -21,7 +21,7 @@ fun main() {
     fileManager.execute("load", config.getDataPath())
     //Starting Server
     val users = TokenManager()
-    val thread = RunPortThread(language, collection, users, config)
+    val thread = RunServerThread(language, collection, users, config)
     Thread(thread, "SocketAcceptor").start()
     //Initializing shell
     val console = Console(language, collection, fileManager, config, validator, builder, thread)

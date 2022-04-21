@@ -25,7 +25,7 @@ class ConnectionHandler(
     private val user: User,
     private val collection: CollectionManager,
     config: ConfigManager
-) {
+): Runnable {
     private val host: String = config.getAddress()
     private val port: Int = config.getPort()
     private val reconnectionTimeout: Long = 3000
@@ -34,15 +34,22 @@ class ConnectionHandler(
     private lateinit var serverSender: ObjectOutputStream
     private lateinit var serverReceiver: ObjectInputStream
 
-
     private var attempts = 0
+    private var connect = false
+    fun isConnected() = connect
 
     fun getUser() = user
 
     /**
-     * Sets the connection with server, providing timeout and first download.
+     * Pulling the one method of the same object to create concurrency.
      */
-    fun tryToConnect(): Boolean {
+    override fun run() { tryToConnect() }
+
+    /**
+     * Sets the connection with server, providing timeout and first download.
+     * Works in different Thread not in control of the class itself
+     */
+    private fun tryToConnect(){
         if (attempts > 0) {
             println(language.getString("Reconnecting"))
         }
@@ -52,9 +59,9 @@ class ConnectionHandler(
             serverSender = ObjectOutputStream(socketChannel.socket().getOutputStream())
             serverReceiver = ObjectInputStream(socketChannel.socket().getInputStream())
             println(language.getString("ConnectionAccept"))
+            connect = true
             createRequest(Request(user, null, 0))
             attempts = 0
-            return true
         } catch (e: IllegalArgumentException) {
             println(language.getString("ConnectionFalse"))
         } catch (e: IOException) {
@@ -69,7 +76,6 @@ class ConnectionHandler(
                 if (!Proceed(language).execute()) exitProcess(0)
             }
         }
-        return false
     }
 
     /**
@@ -129,8 +135,7 @@ class ConnectionHandler(
             serverSender.close()
             serverReceiver.close()
             socketChannel.close()
-        } catch (e: IOException) {
-            println(language.getString("CannotClose"))
+        } catch (_: IOException) {
         } catch (_: UninitializedPropertyAccessException) {}
     }
 }

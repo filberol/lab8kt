@@ -14,7 +14,7 @@ import java.net.SocketException
  * Class providing mainly logic of processing requests and giving answer to client.
  * Receives already created streams.
  */
-class ProcessRequestThread(
+class ClientProcessorThread(
     private val collection: CollectionManager,
     private val language: LanguageManager,
     private val tokens: TokenManager,
@@ -41,12 +41,14 @@ class ProcessRequestThread(
                 val contain = req.geElement()
                 if (contain != null) {
                     //Add if id = 0
-                    if (contain.getID() == 0) {
-                        contain.setID(collection.getFreeID())
-                        collection.addToDb(contain)
-                    //Delete if id !=0
-                    } else {
-                        collection.deleteByID(contain)
+                    synchronized(collection) {
+                        if (contain.getID() == 0) {
+                            contain.setID(collection.getFreeID())
+                            collection.addToDb(contain)
+                            //Delete if id !=0
+                        } else {
+                            collection.deleteByID(contain)
+                        }
                     }
                 }
                 //Common answer

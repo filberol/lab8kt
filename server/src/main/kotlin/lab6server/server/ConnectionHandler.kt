@@ -11,6 +11,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.util.concurrent.Executors
 import kotlin.system.exitProcess
 
 /**
@@ -24,14 +25,16 @@ class ConnectionHandler(
 ) {
     private val port: Int = config.getPort()
     private val soTimeout = config.getSoT()
-    private lateinit var socket: ServerSocket
+    private lateinit var serverSocket: ServerSocket
     private lateinit var sender: ObjectOutputStream
     private lateinit var receiver: ObjectInputStream
 
+    private val executor = Executors.newFixedThreadPool(2)
+
     fun openPort() {
         try {
-            socket = ServerSocket(port)
-            socket.soTimeout = soTimeout
+            serverSocket = ServerSocket(port)
+            serverSocket.soTimeout = soTimeout
         } catch (e: IOException) {
             println(language.getString("SocketError"))
             exitProcess(1)
@@ -51,10 +54,10 @@ class ConnectionHandler(
     fun waitForRequest() {
         try {
             println("Port $port")
-            val clientSocket: Socket = socket.accept()
+            val clientSocket: Socket = serverSocket.accept()
             receiver = ObjectInputStream(clientSocket.getInputStream())
             sender = ObjectOutputStream(clientSocket.getOutputStream())
-            Thread(ProcessRequestThread(collection, language, users, receiver, sender)).start()
+            executor.execute(ClientProcessorThread(collection, language, users, receiver, sender))
         } catch (e: IOException) {
             println(language.getString("SocketAccept"))
         } catch (e: SecurityException) {

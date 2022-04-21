@@ -17,7 +17,7 @@ class Console(
     config: ConfigManager,
     validator: FieldValidator,
     builder: ObjectBuilder,
-    thread: RunPortThread
+    thread: RunServerThread
 ) {
     init {
         println(language.getString("Welcome") + "0.5.5 beta")

@@ -5,7 +5,7 @@ import lab6server.data.commands.Exit
 import lab6server.data.commands.PrintCollection
 import lab6server.data.commands.SaveCollection
 import lab6server.run.Console
-import lab6server.run.RunPortThread
+import lab6server.run.RunServerThread
 
 /**
  * Command manager on server is shortened, but the architecture stays.
@@ -18,7 +18,7 @@ data class CommandManager(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder,
     private val console: Console,
-    private val thread: RunPortThread
+    private val thread: RunServerThread
 ) {
     private var arguments: ArrayList<String> = ArrayList()
 

@@ -7,7 +7,7 @@ import lab6server.server.ConnectionHandler
 import lab6server.data.utilities.TokenManager
 import java.io.Closeable
 
-class RunPortThread(
+class RunServerThread(
     private val language: LanguageManager,
     private val collection: CollectionManager,
     private val users: TokenManager,
@@ -15,13 +15,10 @@ class RunPortThread(
 ): Runnable, Closeable {
     private var run = true
     override fun run() {
+        val connection = ConnectionHandler(language, collection, users, config)
+        connection.openPort()
         while (run) {
-            val connection = ConnectionHandler(language, collection, users, config)
-            connection.openPort()
-
-            while (true) {
-                connection.waitForRequest()
-            }
+            connection.waitForRequest()
         }
     }
 
