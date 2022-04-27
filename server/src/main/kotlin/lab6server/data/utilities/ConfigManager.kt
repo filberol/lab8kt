@@ -30,7 +30,7 @@ class ConfigManager(private val language: LanguageManager) {
         config["CollectionPath"] = "./server/src/main/resources/"
         config["port"] = "5428"
         config["SoTimeout"] = "600000"
-        config["dbAddress"] = "jdbc:postgresql://localhost:5432/lab2prog"
+        config["dbAddress"] = "jdbc:postgresql://localhost:5555/studs"
         config["dbUsername"] = "postgres"
         config["dbPassword"] = "amd921"
     }
