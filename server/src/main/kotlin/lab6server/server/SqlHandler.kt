@@ -25,7 +25,8 @@ class SqlHandler(
     val dataManager = SqlDataManager(dbConnection, collection)
     val userManager = SqlUserManager(dbConnection)
 
-
+    //Команда для прокида порта
+    //ssh -L <порт>:pg:5432 s<ISU>@se.ifmo.ru -p 2222
     private fun settleDatabaseConnection(): Connection {
         val databaseDriver = "org.postgresql.Driver"
         Class.forName(databaseDriver)

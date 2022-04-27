@@ -31,8 +31,6 @@ class ConfigManager(private val language: LanguageManager) {
         config["port"] = "5428"
         config["SoTimeout"] = "600000"
         config["dbAddress"] = "jdbc:postgresql://localhost:5555/studs"
-        config["dbUsername"] = "postgres"
-        config["dbPassword"] = "amd921"
     }
 
     fun getString(arg: String): String = config.getProperty(arg)
