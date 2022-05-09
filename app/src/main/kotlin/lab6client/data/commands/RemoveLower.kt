@@ -22,7 +22,7 @@ class RemoveLower(
         try {
             if (arguments.isNotEmpty()) {
                 collection.sortWith(comparator.birthdayComparator)
-                ServerRemoveByID(language, collection, connection).execute(collection.getByPosition(0).getID())
+                ServerRemoveByID(language, collection, connection).execute(collection.removeByPosition(0).getID())
             } else {
                 println(language getString "NotEnoughArgs")
             }

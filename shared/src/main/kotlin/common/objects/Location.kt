@@ -13,4 +13,8 @@ data class Location(
     fun getX() = x.toString()
     fun getY() = y.toString()
     fun getName() = name
+
+    override fun toString(): String {
+        return "$x / $y / $name"
+    }
 }

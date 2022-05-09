@@ -1,6 +1,7 @@
 package lab6client.run
 
 import lab6client.data.utilities.*
+import lab6client.gui.HomeFrame
 import lab6client.server.ConnectionHandler
 
 /**
@@ -15,17 +16,18 @@ class Console(
     comparator: PersonComparator,
     validator: FieldValidator,
     builder: ObjectBuilder,
-    connection: ConnectionHandler
+    connection: ConnectionHandler,
+    gui: HomeFrame
 ) {
     init {
         println(language.getString("Welcome") + "0.5.5 beta")
-        println("             \\|||/")
-        println("             (o.o)")
+        println("                      \\|||/")
+        println("                    (o.o)")
         println("=---------ooO-(_)-Ooo----------=")
     }
 
     private val manager: CommandManager = CommandManager(history, language, collection,
-        config, comparator, validator, builder, this, connection)
+        config, comparator, validator, builder, this, connection, gui)
 
     fun eatCommand(command: String, arguments: ArrayList<String>) {
         manager.eatCommand(command, arguments)

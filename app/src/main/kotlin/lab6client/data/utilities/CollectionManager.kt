@@ -43,7 +43,7 @@ class CollectionManager(
         return null
     }
 
-    fun getByPosition(index: Int) = collection.removeAt(index)
+    fun removeByPosition(index: Int) = collection.removeAt(index)
 
     fun getIndexBy(birthday: LocalDate): Int? {
         for (person in collection) {
@@ -73,6 +73,18 @@ class CollectionManager(
             println(language.getString("EmptyCollection"))
         }
         return true
+    }
+
+    //Serialize - - - - - - - - - - - - - - - - - - - - - - -
+    fun getTableData(): Array<Array<Any>> {
+        return collection.map { element ->
+            element.javaClass.declaredFields
+                .onEach { field ->  field.isAccessible = true }
+                .sortedBy { it.name }
+                .filter { it.name != "action" }
+                .map { field -> field.get(element) }
+                .toTypedArray()
+        }.toTypedArray()
     }
 
     //Delete - - - - - - - - - - - - - - - - - -

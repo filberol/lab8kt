@@ -33,4 +33,11 @@ class InteractiveMode(
             console.eatCommand(command, commandFeed)
         } catch (_: IndexOutOfBoundsException) {}
     }
+
+    fun start() {
+        while (true) {
+            commandLineRead()
+            //Пусть консоль по кейлистенеру сама вызывает метод, а не беск цикл, тогда нет проблем рекусии консолей
+        }
+    }
 }

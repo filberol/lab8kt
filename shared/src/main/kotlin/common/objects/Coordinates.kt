@@ -10,4 +10,8 @@ data class Coordinates(
 
     fun getX() = x
     fun getY() = y
+
+    override fun toString(): String {
+        return "$x / $y"
+    }
 }

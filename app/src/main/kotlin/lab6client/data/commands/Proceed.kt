@@ -14,11 +14,13 @@ class Proceed(
     @UserEnter
     override fun execute(): Boolean {
         print(language.getString("Commitment"))
-        when (committer.nextLine()) {
-            "Y" -> return true
-            "N" -> return false
-            else -> execute()
+        return when (committer.nextLine()) {
+            "Y" -> true
+            "N" -> false
+            else -> {
+                println(language.getString("SyntaxException"))
+                execute()
+            }
         }
-        return false
     }
 }

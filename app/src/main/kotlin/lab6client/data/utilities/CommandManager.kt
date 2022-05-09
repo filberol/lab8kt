@@ -2,6 +2,7 @@ package lab6client.data.utilities
 
 import lab6client.data.commands.*
 import lab6client.data.commands.InteractiveAdd
+import lab6client.gui.HomeFrame
 import lab6client.run.Console
 import lab6client.server.ConnectionHandler
 
@@ -19,7 +20,8 @@ data class CommandManager(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder,
     private val console: Console,
-    private val connection: ConnectionHandler
+    private val connection: ConnectionHandler,
+    private val gui: HomeFrame
 ) {
     private var arguments: ArrayList<String> = ArrayList()
 
@@ -39,7 +41,8 @@ data class CommandManager(
         "print_field_descending_location" to {PrintCollection(lang, collection).execute(arguments,comparator.locationComparator)},
         "help" to {Help(lang).execute(arguments)},
         "refresh" to {Refresh(lang, collection, connection).execute(arguments)},
-        "demotivator" to {Demotivate(lang).execute(arguments)}
+        "demotivator" to {Demotivate(lang).execute(arguments)},
+        "table" to {gui.updateTableTab()}
     )
 
     fun eatCommand(command: String, args: ArrayList<String>) {

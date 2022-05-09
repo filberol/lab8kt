@@ -3,7 +3,6 @@ package lab6client.server
 import common.entities.Answer
 import common.entities.Request
 import common.entities.User
-import lab6client.data.commands.Proceed
 import lab6client.data.utilities.CollectionManager
 import lab6client.data.utilities.ConfigManager
 import lab6client.data.utilities.LanguageManager
@@ -13,7 +12,6 @@ import java.io.ObjectOutputStream
 import java.net.InetSocketAddress
 import java.nio.channels.SocketChannel
 import kotlin.ClassCastException
-import kotlin.system.exitProcess
 
 /**
  * Class handling the connection to the server.
@@ -24,6 +22,7 @@ class ConnectionHandler(
     private val language: LanguageManager,
     private val user: User,
     private val collection: CollectionManager,
+    private val waiter: Object,
     config: ConfigManager
 ): Runnable {
     private val host: String = config.getAddress()
@@ -39,6 +38,7 @@ class ConnectionHandler(
     fun isConnected() = connect
 
     fun getUser() = user
+    fun clearAttempts() {attempts = 0}
 
     /**
      * Pulling the one method of the same object to create concurrency.
@@ -49,7 +49,7 @@ class ConnectionHandler(
      * Sets the connection with server, providing timeout and first download.
      * Works in different Thread not in control of the class itself
      */
-    private fun tryToConnect(){
+    private fun tryToConnect() {
         if (attempts > 0) {
             println(language.getString("Reconnecting"))
         }
@@ -73,7 +73,9 @@ class ConnectionHandler(
             } else {
                 println(language.getString("CannotConnect"))
                 println(language.getString("Offline"))
-                if (!Proceed(language).execute()) exitProcess(0)
+                synchronized(waiter) {
+                    waiter.notifyAll()
+                }
             }
         }
     }

@@ -3,6 +3,10 @@ package lab6client.run
 import lab6client.data.utilities.*
 import lab6client.server.ConnectionHandler
 import common.entities.User
+import lab6client.data.commands.Proceed
+import lab6client.gui.HomeFrame
+import lab6client.gui.RegDialog
+import kotlin.system.exitProcess
 
 /**
  * @author filberol Inc.
@@ -21,31 +25,36 @@ fun main() {
     val comparator = PersonComparator()
     //Loading Collection
     val collection = CollectionManager(language)
-    //Setting connection
+    //Setting User data and GUI
+    val waiter = Object()
     val user = User()
-    user.setVars()
-    val connection = ConnectionHandler(language, user, collection, config)
-    val connThread = Thread(connection)
-    connThread.start()
+    val connection = ConnectionHandler(language, user, collection, waiter, config)
+    //Initializing GUI
+    RegDialog(user, language)
+    val frame = HomeFrame(collection, language, user, connection)
     //Initializing Shell
-    val console = Console(history, language, collection, config, comparator, validator, builder, connection)
+    val console = Console(history, language, collection, config, comparator, validator, builder, connection, frame)
+    val connThread = Thread(connection).also { it.start() }
+    val userScript = InteractiveMode(console, user)
     //Checking connection
-    Thread.sleep(1000)
+    Thread.sleep(2000)
     if (connThread.isAlive) {
         if (connection.isConnected()) {
             println(language.getString("Queue"))
-            //Starting interactive mode
-            val userScript = InteractiveMode(console, user)
-            while (true) {
-                userScript.commandLineRead()
+            userScript.start()
+        } else {
+            synchronized(waiter) {
+                try {
+                    waiter.wait()
+                } catch (_: InterruptedException) {}
+                if (!Proceed(language).execute()) {
+                    exitProcess(0)
+                } else {
+                    userScript.start()
+                }
             }
         }
     } else {
-        //Starting interactive mode
-        val userScript = InteractiveMode(console, user)
-        while (true) {
-            userScript.commandLineRead()
-        }
+        userScript.start()
     }
-
 }

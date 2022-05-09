@@ -39,15 +39,16 @@ class SqlHandler(
             )
         } catch (e: SQLException) {
             println(language.getString("DBError"))
+            println("Admin> ssh -L 5555:pg:5432 s339106@se.ifmo.ru -p 2222")
             exitProcess(1)
         }
 
     }
     private fun setVars() {
         val scan = Scanner(System.`in`)
-        print("login")
+        print("Login: ")
         dblogin = scan.nextLine()
-        print("password")
+        print("Password: ")
         dbPassword = scan.nextLine()
     }
 }

@@ -20,7 +20,7 @@ class RemoveFirst(
         if (arguments.isEmpty() || (arguments.isNotEmpty().also { println(language.getString("RedundantArgs")) }
                     && Proceed(language).execute())) {
             collection.sortWith(comparator)
-            ServerRemoveByID(language, collection, connection).execute(collection.getByPosition(0).getID())
+            ServerRemoveByID(language, collection, connection).execute(collection.removeByPosition(0).getID())
             println(language getString "Done")
         }
     }
