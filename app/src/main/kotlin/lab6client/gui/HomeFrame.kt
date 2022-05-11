@@ -4,20 +4,23 @@ import common.entities.User
 import lab6client.data.utilities.CollectionManager
 import lab6client.data.utilities.LanguageManager
 import lab6client.server.ConnectionHandler
+import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
 import java.io.File
 import javax.swing.*
 
 
 class HomeFrame(
     collection: CollectionManager,
-    private val language: LanguageManager,
-    private val user: User,
-    private val connection: ConnectionHandler
+    language: LanguageManager,
+    user: User,
+    connection: ConnectionHandler
 ): JFrame(language.getString("Title")) {
 
-    private val tableManager = TabTable(collection)
     private val consoleTab = TabConsole().getScrollPanedConsole()
+    private val tableManager = TabTable(collection)
     private val tableTab = tableManager.getUpdatableTable()
 
 
@@ -26,45 +29,36 @@ class HomeFrame(
         val imageIcon = ImageIcon(File("app/src/main/resources/images/icon.png")
             .absolutePath)
         iconImage = imageIcon.image
-        minimumSize = Dimension(1100,760)
+        minimumSize = Dimension(1100,720)
         //setBounds(50, 50, 1000, 650)
         defaultCloseOperation = EXIT_ON_CLOSE
         isResizable = true
 
         //Adding Panel with default layout
-        val homePanel = JPanel()
+        val homePanel = JPanel(BorderLayout())
+        homePanel.border = BorderFactory.createTitledBorder("@filberol")
         add(homePanel)
 
         //Adding Tabbed pane and adding tabs
-        val tabbed = JTabbedPane(JTabbedPane.TOP)
+        val tabbed = AutoUpdatableJTabbedPane(tableManager)
 
         tabbed.addTab(language.getString("Console"), consoleTab)
         tabbed.addTab(language.getString("Table"), tableTab)
-        tabbed.addTab("Graphic", JButton("ABOBA"))
-        homePanel.add(tabbed)
+        tabbed.addTab(language.getString("Graphic"), JButton("ABOBA"))
+        homePanel.add(tabbed, BorderLayout.CENTER)
 
         //Adding different buttons
-        homePanel.add(JButton("Re-login").also {
-            it.verticalAlignment = JButton.BOTTOM
-            it.horizontalAlignment = JButton.LEFT
-            it.addActionListener {
-                RegDialog(user, language)
-                connection.clearAttempts()
-                Thread(connection).start()
+        homePanel.add(ButtonsMenu(
+            language, user, connection, collection, tableManager
+        ), BorderLayout.EAST)
+
+        homePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+            .put(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), "color")
+        homePanel.actionMap.put("color", object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent?) {
+                tabbed.selectedIndex = (tabbed.selectedIndex + 1) % 3
             }
         })
-
-        //homePanel.actionMap.put("switchTab", object : AbstractAction() {
-        //    override fun actionPerformed(e: ActionEvent?) {
-        //        if (tabbed.selectedIndex == tabbed.tabCount - 1) {
-        //            tabbed.selectedIndex = 0
-        //        } else {
-        //            tabbed.selectedIndex = tabbed.selectedIndex
-        //        }
-        //    }
-        //})
-        //val inputMap = homePanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-        //inputMap.put(KeyStroke.getKeyStroke("shift released \u0009"), "switchTab")
 
 
         pack()
@@ -73,5 +67,14 @@ class HomeFrame(
 
     fun updateTableTab() {
         tableManager.updateTable()
+    }
+
+    class AutoUpdatableJTabbedPane(
+        private val tableManager: TabTable
+    ): JTabbedPane() {
+        override fun setSelectedIndex(index: Int) {
+            if (selectedIndex == 0) tableManager.updateTable()
+            super.setSelectedIndex(index)
+        }
     }
 }

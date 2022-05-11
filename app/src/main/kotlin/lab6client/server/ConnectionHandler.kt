@@ -35,10 +35,11 @@ class ConnectionHandler(
 
     private var attempts = 0
     private var connect = false
+    private var processing = false
     fun isConnected() = connect
+    fun isProcessing() = processing
 
     fun getUser() = user
-    fun clearAttempts() {attempts = 0}
 
     /**
      * Pulling the one method of the same object to create concurrency.
@@ -50,6 +51,7 @@ class ConnectionHandler(
      * Works in different Thread not in control of the class itself
      */
     private fun tryToConnect() {
+        processing = true
         if (attempts > 0) {
             println(language.getString("Reconnecting"))
         }
@@ -78,6 +80,8 @@ class ConnectionHandler(
                 }
             }
         }
+        attempts = 0
+        processing = false
     }
 
     /**

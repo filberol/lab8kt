@@ -16,9 +16,7 @@ class TabTable(
     private var data: Array<Array<Any>> = collection.getTableData()
     private var pane: JScrollPane = constructTable(data)
 
-    private val panel: JPanel = JPanel().also {
-        it.layout = GridLayout()
-    }
+    private val panel: JPanel = JPanel(GridLayout())
 
     fun getUpdatableTable(): JPanel {
         return panel
@@ -39,10 +37,6 @@ class TabTable(
             JTable(
             arrayData, smartColumns
         )
-                //.also {
-            //it.autoResizeMode = JTable.AUTO_RESIZE_ALL_COLUMNS
-            //it.preferredSize = Dimension(700,500)
-        //}
     ).also {
             it.verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
         }

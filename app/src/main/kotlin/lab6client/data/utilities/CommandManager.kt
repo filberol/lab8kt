@@ -1,8 +1,10 @@
 package lab6client.data.utilities
 
+import common.entities.User
 import lab6client.data.commands.*
 import lab6client.data.commands.InteractiveAdd
 import lab6client.gui.HomeFrame
+import lab6client.gui.RegDialog
 import lab6client.run.Console
 import lab6client.server.ConnectionHandler
 
@@ -21,7 +23,8 @@ data class CommandManager(
     private val builder: ObjectBuilder,
     private val console: Console,
     private val connection: ConnectionHandler,
-    private val gui: HomeFrame
+    private val gui: HomeFrame,
+    private val user: User
 ) {
     private var arguments: ArrayList<String> = ArrayList()
 
@@ -42,7 +45,9 @@ data class CommandManager(
         "help" to {Help(lang).execute(arguments)},
         "refresh" to {Refresh(lang, collection, connection).execute(arguments)},
         "demotivator" to {Demotivate(lang).execute(arguments)},
-        "table" to {gui.updateTableTab()}
+        "table" to {gui.updateTableTab()},
+        "reconnect" to {RegDialog(user, lang, connection)
+                        Thread(connection).start()}
     )
 
     fun eatCommand(command: String, args: ArrayList<String>) {

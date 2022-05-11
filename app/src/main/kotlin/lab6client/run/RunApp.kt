@@ -30,14 +30,15 @@ fun main() {
     val user = User()
     val connection = ConnectionHandler(language, user, collection, waiter, config)
     //Initializing GUI
-    RegDialog(user, language)
+    RegDialog(user, language, connection)
     val frame = HomeFrame(collection, language, user, connection)
     //Initializing Shell
-    val console = Console(history, language, collection, config, comparator, validator, builder, connection, frame)
+    val console = Console(history, language, collection, config, comparator,
+        validator, builder, connection, frame, user)
     val connThread = Thread(connection).also { it.start() }
     val userScript = InteractiveMode(console, user)
     //Checking connection
-    Thread.sleep(2000)
+    Thread.sleep(1000)
     if (connThread.isAlive) {
         if (connection.isConnected()) {
             println(language.getString("Queue"))

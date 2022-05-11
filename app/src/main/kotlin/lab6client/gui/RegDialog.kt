@@ -2,35 +2,43 @@ package lab6client.gui
 
 import common.entities.User
 import lab6client.data.utilities.LanguageManager
+import lab6client.server.ConnectionHandler
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Toolkit
 import java.awt.event.*
 import javax.swing.*
-import kotlin.system.exitProcess
 
 /**
  * Registration window. Provides fields, does not connect.
  */
 class RegDialog(
     private val user: User,
-    private val language: LanguageManager
+    private val language: LanguageManager,
+    private val connManager: ConnectionHandler
 ): JFrame() {
     private val frameWidth = 300
     private val frameHeight = 180
     private val scSize: Dimension = Toolkit.getDefaultToolkit().screenSize
-    private val textFont = Font("Verdana", Font.PLAIN, 16)
-    private val fieldFont = Font("Verdana", Font.BOLD, 14)
-    private val columns = 18
+    private val textFont = Font("SansSerif", Font.ITALIC, 14)
+    private val fieldFont = Font("Monospaced", Font.BOLD, 14)
+    private val columns = 30
 
     init {
         askLoginPass()
     }
 
     private fun askLoginPass() {
+        if (connManager.isProcessing()) {
+            throw RuntimeException()
+        }
+        if (connManager.isConnected()) {
+            println("reconnect")
+        }
         val title = language.getString("RegTitle")
 
         //Dialog window
+        isAlwaysOnTop = true
         val dialog = JDialog(this, title, true)
         dialog.isResizable = false
         dialog.defaultCloseOperation = DISPOSE_ON_CLOSE
@@ -99,7 +107,7 @@ class RegDialog(
                 dispose()
             }
         })
-        val inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+        val inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
         inputMap.put(KeyStroke.getKeyStroke('\n'), "confirm")
         inputMap.put(KeyStroke.getKeyStroke(''), "cancel")
 
@@ -107,10 +115,7 @@ class RegDialog(
     }
 
     private fun checkAndRead(loginField: JTextField, passField: JPasswordField) {
-        if (loginField.text.length < 4 || passField.password.size < 4) {
-            //TODO
-            exitProcess(0)
-        } else {
+        if (loginField.text.length >= 4 || passField.password.size >= 4) {
             user.readVars(loginField.text, passField.password.toString())
             dispose()
         }

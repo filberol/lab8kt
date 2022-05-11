@@ -5,33 +5,34 @@ import java.time.ZonedDateTime
 import java.io.Serializable
 
 data class Person(
-    private var id: Int,
-    private val name: String,
-    private val coordinates: Coordinates,
-    private val creationDate: ZonedDateTime,
-    private val height: Int,
-    private val birthday: LocalDate,
-    private val eyeColor: EyeColor,
-    private val hairColor: HairColor,
-    private val location: Location,
-    private val owner: String,
+    private var Id: Int,
+    private val Name: String,
+    private val Coordinates: Coordinates,
+    private val CreationDate: ZonedDateTime,
+    private val Height: Int,
+    private val Birthday: LocalDate,
+    private val EyeColor: EyeColor,
+    private val HairColor: HairColor,
+    private val Location: Location,
+    private val Owner: String,
     private var action: Boolean
 ): Serializable {
-    fun getID() = id
-    fun setID(Id: Int) {id = Id}
-    fun getName() = name
-    fun getBirthday() = birthday
-    fun getLocName() = location.getName()
+    fun getID() = Id
+    fun setID(Id: Int) {
+        this.Id = Id}
+    fun getName() = Name
+    fun getBirthday() = Birthday
+    fun getLocName() = Location.getName()
     fun getAction() = action
     fun setAction(a: Boolean) {action = a}
 
     fun toTable() = String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
-            id, name, coordinates.toTable(), creationDate, height, birthday.toString(),
-            eyeColor.toString(), hairColor.toString(), location.toTable())
+            Id, Name, Coordinates.toTable(), CreationDate, Height, Birthday.toString(),
+            EyeColor.toString(), HairColor.toString(), Location.toTable())
 
     fun serialize(): List<String> = listOf(
-            id.toString(), name, coordinates.getX().toString(), coordinates.getY().toString(),
-            creationDate.toString(), height.toString(), birthday.toString(), eyeColor.toString(),
-            hairColor.toString(), location.getX(), location.getY(), location.getName(), owner,
+            Id.toString(), Name, Coordinates.getX().toString(), Coordinates.getY().toString(),
+            CreationDate.toString(), Height.toString(), Birthday.toString(), EyeColor.toString(),
+            HairColor.toString(), Location.getX(), Location.getY(), Location.getName(), Owner,
             action.toString())
 }
