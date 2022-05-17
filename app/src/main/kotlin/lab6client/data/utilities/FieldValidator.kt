@@ -24,12 +24,12 @@ class FieldValidator {
         Float::class to String::toFloat
     )
 
-    fun parseField(to: String?, out: KClass<out Any>): Any? {
-        val func = table[out]!!
+    fun parseField(input: String?, output: KClass<out Any>): Any? {
+        val func = table[output]!!
         return try {
-            when (to) {null -> null else -> func.invoke(to)}
+            when (input) {null -> null else -> func.invoke(input)}
         } catch (e: Exception) {
-            throw ParseException(to!!)
+            throw ParseException(input!!)
         }
     }
 }

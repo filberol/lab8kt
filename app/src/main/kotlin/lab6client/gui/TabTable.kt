@@ -6,13 +6,15 @@ import java.awt.GridLayout
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTable
+import javax.swing.table.DefaultTableModel
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 class TabTable(
     private val collection: CollectionManager
 ) {
-    private val smartColumns: Array<String> = reflectTableColumns(Person::class)
+    private val rawElement = Person::class
+    private val smartColumns: Array<String> = reflectTableColumns(rawElement)
     private var data: Array<Array<Any>> = collection.getTableData()
     private var pane: JScrollPane = constructTable(data)
 
@@ -33,13 +35,25 @@ class TabTable(
     private fun constructTable(
         arrayData: Array<Array<Any>>
     ): JScrollPane {
-        return JScrollPane(
-            JTable(
-            arrayData, smartColumns
-        )
-    ).also {
-            it.verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+
+        val tableModel = object: DefaultTableModel(arrayData, smartColumns) {
+            override fun isCellEditable(row: Int, column: Int): Boolean {
+                return false
+            }
+
+            override fun getColumnClass(columnIndex: Int): Class<out Any> {
+                return Person::class.java.declaredFields.sortedBy { it.name }[columnIndex].type
+
+            }
         }
+
+        return JScrollPane(
+            JTable( tableModel ).also {
+                it.autoCreateRowSorter = true
+            }
+            ).also {
+                it.verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+            }
     }
 
     fun updateTable() {

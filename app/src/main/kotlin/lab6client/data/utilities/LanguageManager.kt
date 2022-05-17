@@ -20,5 +20,11 @@ class LanguageManager {
         language = ResourceBundle.getBundle("lang/localization", Locale(locale))
     }
 
-    infix fun getString(s: String) = language.getString(s) ?: String()
+    infix fun getString(s: String): String {
+        return try {
+            language.getString(s)
+        } catch (e: MissingResourceException) {
+            "PlaceHolderString"
+        }
+    }
 }

@@ -3,6 +3,7 @@ package lab6client.gui
 import common.entities.User
 import lab6client.data.utilities.LanguageManager
 import lab6client.server.ConnectionHandler
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Toolkit
@@ -64,6 +65,21 @@ class RegDialog(
             it.horizontalAlignment = JTextField.LEFT
             it.font = fieldFont
         }
+        loginField.addKeyListener(object : KeyAdapter() {
+            override fun keyTyped(e: KeyEvent?) {
+                if (e!!.keyChar == '\b') {
+                    loginField.foreground = Color.RED
+                    return
+                }
+                if (loginField.text.trim().length < 3) {
+                    loginField.foreground = Color.RED
+                    loginField.toolTipText = language.getString("LoginRule")
+                } else {
+                    loginField.foreground = Color.GREEN
+                    loginField.toolTipText = null
+                }
+            }
+        })
         panel.add(loginField)
 
         //Password label
@@ -78,6 +94,21 @@ class RegDialog(
             it.horizontalAlignment = JTextField.LEFT
             it.font = fieldFont
         }
+        passField.addKeyListener(object : KeyAdapter() {
+            override fun keyTyped(e: KeyEvent?) {
+                if (e!!.keyChar == '\b') {
+                    passField.foreground = Color.RED
+                    return
+                }
+                if (passField.password.size < 3) {
+                    passField.foreground = Color.RED
+                    passField.toolTipText = language.getString("PassRule")
+                } else {
+                    passField.foreground = Color.GREEN
+                    passField.toolTipText = null
+                }
+            }
+        })
         panel.add(passField)
 
         //Confirmation button
@@ -108,6 +139,7 @@ class RegDialog(
             }
         })
         val inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK), "confirm")
         inputMap.put(KeyStroke.getKeyStroke('\n'), "confirm")
         inputMap.put(KeyStroke.getKeyStroke(''), "cancel")
 
@@ -115,7 +147,7 @@ class RegDialog(
     }
 
     private fun checkAndRead(loginField: JTextField, passField: JPasswordField) {
-        if (loginField.text.length >= 4 || passField.password.size >= 4) {
+        if (loginField.text.length >= 4 && passField.password.size >= 4) {
             user.readVars(loginField.text, passField.password.toString())
             dispose()
         }

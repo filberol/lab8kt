@@ -12,7 +12,7 @@ import kotlin.system.exitProcess
  * @author filberol Inc.
  * @version alpha 0.5.5
  */
-fun main() {
+fun main(args: Array<String>) {
     //Loading language pack
     val language = LanguageManager()
     //Loading Config
@@ -30,8 +30,13 @@ fun main() {
     val user = User()
     val connection = ConnectionHandler(language, user, collection, waiter, config)
     //Initializing GUI
-    RegDialog(user, language, connection)
-    val frame = HomeFrame(collection, language, user, connection)
+    var frame: HomeFrame? = null
+    if (!args.contains("Dmode=cli")) {
+        RegDialog(user, language, connection)
+        frame = HomeFrame(collection, language, user, connection, validator, builder)
+    } else {
+        user.readVars()
+    }
     //Initializing Shell
     val console = Console(history, language, collection, config, comparator,
         validator, builder, connection, frame, user)

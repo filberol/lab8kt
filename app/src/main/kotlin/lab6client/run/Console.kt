@@ -18,7 +18,7 @@ class Console(
     validator: FieldValidator,
     builder: ObjectBuilder,
     connection: ConnectionHandler,
-    gui: HomeFrame,
+    gui: HomeFrame? = null,
     user: User
 ) {
     init {

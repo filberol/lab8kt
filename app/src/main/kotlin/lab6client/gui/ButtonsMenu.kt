@@ -3,7 +3,9 @@ package lab6client.gui
 import common.entities.User
 import lab6client.data.commands.server.ServerAdd
 import lab6client.data.utilities.CollectionManager
+import lab6client.data.utilities.FieldValidator
 import lab6client.data.utilities.LanguageManager
+import lab6client.data.utilities.ObjectBuilder
 import lab6client.server.ConnectionHandler
 import java.awt.Color
 import java.awt.GridLayout
@@ -16,9 +18,11 @@ class ButtonsMenu(
     private val user: User,
     private val connection: ConnectionHandler,
     private val collection: CollectionManager,
-    private val table: TabTable
+    private val table: TabTable,
+    private val validator: FieldValidator,
+    private val builder: ObjectBuilder
 ): JPanel(
-    GridLayout(5,1)
+    GridLayout(6,1)
 ) {
     init {
         add(JPanel())
@@ -46,6 +50,13 @@ class ButtonsMenu(
             it.background = Color.RED
             it.addActionListener {
                 exitProcess(0)
+            }
+        })
+
+        add(JButton(language.getString("Add")).also {
+            it.background = Color.GRAY
+            it.addActionListener {
+                AddDialog(validator, language, builder, user, collection, connection)
             }
         })
     }

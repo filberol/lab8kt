@@ -2,6 +2,7 @@ package common.entities
 
 import java.io.Serializable
 import java.security.MessageDigest
+import java.util.Scanner
 
 class User: Serializable {
     private var login = "user"
@@ -13,6 +14,14 @@ class User: Serializable {
     fun getToken() = token
     fun getLogin() = login
     fun getPass() = password
+
+    fun readVars() {
+        val scanner = Scanner(System.`in`)
+        print("Login: ")
+        login = scanner.nextLine()
+        print("Password: ")
+        password = encodePass(scanner.nextLine())
+    }
 
     fun readVars(log: String, pass: String) {
         login = log
