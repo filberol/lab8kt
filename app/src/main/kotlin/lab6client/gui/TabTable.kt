@@ -41,10 +41,9 @@ class TabTable(
                 return false
             }
 
-            override fun getColumnClass(columnIndex: Int): Class<out Any> {
-                return Person::class.java.declaredFields.sortedBy { it.name }[columnIndex].type
-
-            }
+            //override fun getColumnClass(columnIndex: Int): Class<out Any> {
+            //    return Person::class.java.declaredFields.sortedBy { it.name }[columnIndex].type
+            //}
         }
 
         return JScrollPane(

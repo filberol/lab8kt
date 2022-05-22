@@ -1,37 +1,80 @@
 package lab6client.gui
 
 import lab6client.data.utilities.CollectionManager
+import java.awt.BorderLayout
 import java.awt.GridLayout
-import java.io.File
-import javax.swing.ImageIcon
-import javax.swing.JButton
+import java.awt.event.*
+import javax.swing.BorderFactory
 import javax.swing.JPanel
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 class TabGrapInfo(
     private val collection: CollectionManager
 ) {
-    private val sprite = ImageIcon(
-        File("app/src/main/resources/images/ssprite.png")
-        .absolutePath)
+    private val panel = JPanel(GridLayout())
     private var innerPanel = constructGraph()
-    private val panel = JPanel(GridLayout()).also {
-        it.add(innerPanel)
+
+    init {
+        panel.add(innerPanel)
     }
 
-    fun getUpdatableGraph(): JPanel {
-        return panel
-    }
+    fun getUpdatableGraph(): JPanel = panel
 
     private fun constructGraph(): JPanel {
-        val size = collection.getSize()
+        val grid = estimateGridLayout() ?: return JPanel()
         return JPanel(
-            GridLayout(size/2, size/2+1)).also {
-            it.add(JButton(sprite))
-            it.add(JButton(sprite))
-            it.add(JButton(sprite))
-            it.add(JButton(sprite))
-            it.add(JButton(sprite))
+            GridLayout(grid.first, grid.second)).also { it ->
+            var estimated = estimateWidthAndHeight()
+            for (el in collection.getTableData()) {
+                val sprite = SpritePic(el, estimated.first, estimated.second)
+                it.add(JPanel(BorderLayout()).also {
+                    it.border = BorderFactory.createTitledBorder(el[8].toString())
+                    it.add(sprite)
+                    it.addComponentListener(object : ComponentAdapter() {
+                        override fun componentResized(e: ComponentEvent?) {
+                            estimated = estimateWidthAndHeight()
+                            sprite.update(estimated.first, estimated.second)
+                        }
+                    })
+                    it.addMouseListener(object : MouseAdapter() {
+                        override fun mouseEntered(e: MouseEvent?) {
+                            sprite.startAnimation()
+                        }
+                        override fun mouseExited(e: MouseEvent?) {
+                            sprite.stopAnimation()
+                        }
+                    })
+                })
 
+            }
+        }
+    }
+
+    private fun estimateWidthAndHeight(): Pair<Int, Int> {
+        val size = collection.getSize()
+        val sqrt = sqrt(collection.getSize().toDouble())
+        if (size == 0) return Pair(panel.width, panel.height)
+        return if (floor(sqrt) == sqrt) {
+            Pair(
+                panel.width / sqrt.toInt(),
+                panel.height / sqrt.toInt())
+        } else {
+            Pair(
+                panel.width / (size / 2 + 1),
+                panel.height / (size / 2)
+            )
+        }
+    }
+
+    private fun estimateGridLayout(): Pair<Int, Int>? {
+        val size = collection.getSize()
+        val sqrt = sqrt(collection.getSize().toDouble())
+        if (size == 0) return null
+        return if (floor(sqrt) == sqrt) {
+            Pair(sqrt.toInt(), sqrt.toInt())
+        } else {
+            Pair(size / 2, size / 2 + 1)
         }
     }
 

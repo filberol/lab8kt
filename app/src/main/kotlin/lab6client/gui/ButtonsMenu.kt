@@ -8,8 +8,15 @@ import lab6client.data.utilities.LanguageManager
 import lab6client.data.utilities.ObjectBuilder
 import lab6client.server.ConnectionHandler
 import java.awt.Color
+import java.awt.Graphics
+import java.awt.Graphics2D
 import java.awt.GridLayout
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.io.File
+import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.JComboBox
 import javax.swing.JPanel
 import kotlin.system.exitProcess
 
@@ -18,46 +25,90 @@ class ButtonsMenu(
     private val user: User,
     private val connection: ConnectionHandler,
     private val collection: CollectionManager,
-    private val table: TabTable,
+    private val screen: HomeFrame,
     private val validator: FieldValidator,
     private val builder: ObjectBuilder
 ): JPanel(
-    GridLayout(6,1)
+    GridLayout(9,1)
 ) {
+    private val reLoginButton = JButton().also {
+        it.addActionListener {
+            try {
+                RegDialog(user, language, connection)
+                Thread(connection).start()
+            } catch (_: RuntimeException) {}
+        }
+    }
+    private val refreshButton = JButton().also {
+        it.background = Color.GREEN
+        it.addActionListener {
+            ServerAdd(language, collection, connection).execute(null)
+            screen.updateCurrentTab()
+        }
+    }
+    private val addButton = JButton().also {
+        it.background = Color.GRAY
+        it.addActionListener {
+            AddDialog(validator, language, builder, user, collection, connection)
+        }
+    }
+    private val exitButton = JButton().also {
+        it.background = Color.RED
+        it.addActionListener {
+            exitProcess(0)
+        }
+    }
+    private val langs = arrayOf("Русский", "Russian", "English", "Norsk", "Lietuvių", "Español")
+    private val langPackButton = LangComboBox(langs).also {
+        it.selectedIndex = 0
+        it.addActionListener(LangMenu(language, screen))
+    }
+
     init {
         add(JPanel())
+        add(JPanel())
+        add(reLoginButton)
+        add(refreshButton)
+        add(addButton)
+        add(exitButton)
+        add(langPackButton)
+        updateLabels()
+    }
 
-        add(JButton(language.getString("Re-login")).also {
-            it.addActionListener {
-                try {
-                    RegDialog(user, language, connection)
-                    Thread(connection).start()
-                } catch (_: RuntimeException) {}
-            }
-        })
+    fun updateLabels() {
+        reLoginButton.text = language.getString("Re-login")
+        refreshButton.text = language.getString("Refresh")
+        addButton.text = language.getString("Add")
+        exitButton.text = language.getString("Exit")
+        repaint()
+    }
 
-        add(JButton(language.getString("Refresh")).also {
-            it.background = Color.GREEN
-            it.addActionListener {
-                println("refresh")
-                ServerAdd(language, collection, connection).execute(null)
-                table.updateTable()
-                print("${user.getLogin()}>")
+    class LangMenu(
+        private val language: LanguageManager,
+        private val screen: HomeFrame
+    ): ActionListener {
+        override fun actionPerformed(e: ActionEvent?) {
+            val source = e!!.source as JComboBox<*>
+            val locale = when(source.selectedItem?.toString()) {
+                "Русский" -> "ru_RU"
+                "Russian" -> "en_RU"
+                "English" -> "en_US"
+                "Norsk" -> "no_NO"
+                "Lietuvių" -> "Lt-LT"
+                "Español" -> "es_EQ"
+                else -> "en_US"
             }
-        })
+            language.setLanguage(locale)
+            screen.updateLabels()
+        }
+    }
 
-        add(JButton(language.getString("Exit")).also {
-            it.background = Color.RED
-            it.addActionListener {
-                exitProcess(0)
-            }
-        })
-
-        add(JButton(language.getString("Add")).also {
-            it.background = Color.GRAY
-            it.addActionListener {
-                AddDialog(validator, language, builder, user, collection, connection)
-            }
-        })
+    class LangComboBox(langs: Array<String>): JComboBox<String>(langs) {
+        override fun paint(g: Graphics?) {
+            val g2d = g as Graphics2D
+            g2d.drawImage(ImageIcon(
+                File("app/src/main/resources/images/flag.png").absolutePath
+            ).image, 0, 0, width, height, null)
+        }
     }
 }

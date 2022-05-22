@@ -10,7 +10,7 @@ import java.util.Properties
  * Class stores the config for client, saved in file.
  * Supports common values.
  */
-class ConfigManager(private val language: LanguageManager) {
+class ConfigManager(language: LanguageManager) {
     private var config: Properties = Properties()
     init {
         setDefaults()
@@ -23,22 +23,21 @@ class ConfigManager(private val language: LanguageManager) {
         } catch (e: IOException) {
             println(language.getString("ConfigError"))
         }
-        changeLanguage(config.getProperty("Language"))
+        language.setLanguage(config.getProperty("Language"))
     }
     private fun setDefaults() {
-        config["Language"] = "en"
+        config["Language"] = "en_EN"
         config["Mode"] = "standalone"
         config["HistoryLength"] = "7"
         config["HistoryLog"] = "true"
         config["HistoryLogUnknown"] = "false"
         config["CollectionPath"] = "./app/src/main/resources/"
         config["InetAddress"] = "127.0.0.1"
-        config["port"] = "5428"
+        config["Port"] = "5428"
     }
 
     fun getString(arg: String): String = config.getProperty(arg)
     fun getLogU() = config.getProperty("HistoryLogUnknown").toBoolean()
     fun getAddress() = config.getProperty("InetAddress")!!
-    fun getPort() = config.getProperty("port").toInt()
-    private fun changeLanguage(lang: String) {language.setLanguage(lang)}
+    fun getPort() = config.getProperty("Port").toInt()
 }

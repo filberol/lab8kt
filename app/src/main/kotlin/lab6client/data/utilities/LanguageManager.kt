@@ -1,30 +1,34 @@
 package lab6client.data.utilities
 
-import java.util.*
+import java.io.InputStreamReader
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.util.Properties
+import java.util.Locale
+
 
 /**
- * Class holds ResourceBundle with localisation.
- * Different languages to be realized.
+ * Class holds PROPERTY FILE WITH UTF-8 SUPPORTED with localisation.
  */
 class LanguageManager {
-    private lateinit var language: ResourceBundle
+    private var langPackMap: Properties = Properties()
+    private val langSource = "app/src/main/resources/lang/localization"
+    private var locale = Locale.getDefault().toString()
+
     init {
-        setLanguage()
+        setLanguage(locale)
     }
 
-    private fun setLanguage() {
-        val locale = Locale("en","US")
-        language = ResourceBundle.getBundle("lang/localization", locale)//ПОСТАВЬ НОРМАЛЬНУЮ ЛОКАЛЬ
-    }
-    fun setLanguage(locale: String) {
-        language = ResourceBundle.getBundle("lang/localization", Locale(locale))
-    }
-
-    infix fun getString(s: String): String {
-        return try {
-            language.getString(s)
-        } catch (e: MissingResourceException) {
-            "PlaceHolderString"
+    fun setLanguage(localeIn: String) {
+        try {
+            langPackMap.load(InputStreamReader(FileInputStream("${langSource}_$localeIn.config")))
+        } catch (e: FileNotFoundException) {
+            println("Language File does not exist")
+        } catch (e: IOException) {
+            println("Cannot load Language Pack")
         }
     }
+
+    infix fun getString(s: String): String = langPackMap.getProperty(s)
 }

@@ -13,7 +13,7 @@ enum class HairColor(private val color: String): Serializable {
 
     companion object Parser {
         fun parse(x: String): HairColor {
-            return when (x.lowercase()) {
+            return when (x.lowercase().trim()) {
                 "red" -> RED
                 "blue" -> BLUE
                 "yellow" -> YELLOW

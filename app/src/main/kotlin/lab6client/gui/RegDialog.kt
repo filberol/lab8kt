@@ -112,7 +112,7 @@ class RegDialog(
         panel.add(passField)
 
         //Confirmation button
-        panel.add(JButton("OK").also {
+        panel.add(JButton(language.getString("OK")).also {
             it.horizontalAlignment = JButton.LEFT
             it.addActionListener {
                 checkAndRead(loginField, passField)
@@ -120,7 +120,7 @@ class RegDialog(
         })
 
         //Cancel button
-        panel.add(JButton("Cancel").also {
+        panel.add(JButton(language.getString("Cancel")).also {
             it.horizontalAlignment = JButton.RIGHT
             it.addActionListener {
                 dispose()

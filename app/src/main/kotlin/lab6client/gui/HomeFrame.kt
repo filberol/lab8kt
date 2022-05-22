@@ -31,6 +31,13 @@ class HomeFrame(
     private val graphManager = TabGrapInfo(collection)
     private val graphTab = graphManager.getUpdatableGraph()
 
+    //Adding Tabbed pane and adding tabs
+    private val tabbed = JTabbedPane()
+
+    private val buttonMenu = ButtonsMenu(
+        language, user, connection, collection, this, validator, builder
+    )
+
     init {
         //Setting Main frame
         val imageIcon = ImageIcon(File("app/src/main/resources/images/icon.png")
@@ -47,18 +54,13 @@ class HomeFrame(
         homePanel.border = BorderFactory.createTitledBorder("@filberol")
         add(homePanel)
 
-        //Adding Tabbed pane and adding tabs
-        val tabbed = AutoUpdatableJTabbedPane(tableManager, graphManager)
-
         tabbed.addTab(language.getString("Table"), tableTab)
         tabbed.addTab(language.getString("Graphic"), graphTab)
         updateTableTab()
         homePanel.add(tabbed, BorderLayout.CENTER)
 
         //Adding different buttons
-        homePanel.add(ButtonsMenu(
-            language, user, connection, collection, tableManager, validator, builder
-        ), BorderLayout.EAST)
+        homePanel.add(buttonMenu, BorderLayout.EAST)
 
         homePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
             .put(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), "color")
@@ -89,16 +91,15 @@ class HomeFrame(
         tableManager.updateTable()
     }
 
-    class AutoUpdatableJTabbedPane(
-        private val tableManager: TabTable,
-        private val graphManager: TabGrapInfo
-    ): JTabbedPane() {
-        override fun setSelectedIndex(index: Int) {
-            when (tabCount - selectedIndex - 1) {
-                0 -> tableManager.updateTable()
-                1 -> graphManager.updateGraph()
-            }
-            super.setSelectedIndex(index)
+    fun updateCurrentTab() {
+        when (tabbed.selectedIndex) {
+            0 -> tableManager.updateTable()
+            1 -> graphManager.updateGraph()
         }
+    }
+
+    fun updateLabels() {
+        buttonMenu.updateLabels()
+        repaint()
     }
 }

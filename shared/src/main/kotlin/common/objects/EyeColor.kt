@@ -12,7 +12,7 @@ enum class EyeColor(private val color: String): Serializable {
 
     companion object Parser {
         fun parse(x: String): EyeColor {
-            return when (x.lowercase()) {
+            return when (x.lowercase().trim()) {
                 "blue" -> BlUE
                 "orange" -> ORANGE
                 "brown" -> BROWN

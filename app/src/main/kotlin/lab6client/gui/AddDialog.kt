@@ -6,6 +6,7 @@ import lab6client.data.exceptions.ParseException
 import lab6client.data.utilities.*
 import lab6client.server.ConnectionHandler
 import java.awt.*
+import java.awt.event.ActionEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.io.File
@@ -47,6 +48,7 @@ class AddDialog(
         //Initializing Frame
         isAlwaysOnTop = true
         val dialog = JDialog(this, title,true)
+        dialog.minimumSize = Dimension(frameWidth+130, frameHeight+110)
         dialog.isResizable = true
         dialog.defaultCloseOperation = DISPOSE_ON_CLOSE
         dialog.setBounds(
@@ -57,6 +59,7 @@ class AddDialog(
 
         //Component placement
         val allPanel = JPanel(BorderLayout())
+        allPanel.border = BorderFactory.createEmptyBorder(10,5,5,10)
         dialog.add(allPanel)
 
         //Labels
@@ -65,6 +68,7 @@ class AddDialog(
             degenerated.add(i)
             labelPanel.add(JLabel(labels[i].replace('/', ' ')).also {
                 it.font = textFont
+                it.horizontalAlignment = SwingConstants.CENTER
             })
 
         }
@@ -104,6 +108,22 @@ class AddDialog(
             }
         })
         allPanel.add(buttPanel, BorderLayout.SOUTH)
+
+        //KeyStrokes Setting
+        allPanel.actionMap.put("confirm", object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent?) {
+                fin()
+            }
+        })
+        allPanel.actionMap.put("cancel", object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent?) {
+                dispose()
+            }
+        })
+        val inputMap = allPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK), "confirm")
+        inputMap.put(KeyStroke.getKeyStroke('\n'), "confirm")
+        inputMap.put(KeyStroke.getKeyStroke(''), "cancel")
 
         dialog.isVisible = true
     }
