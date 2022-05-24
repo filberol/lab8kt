@@ -19,10 +19,10 @@ class SpritePic(
     private val timer = Timer(100,this)
 
     private val source = "app/src/main/resources/images/"
-    val file = source + "back" + (Math.random()*7).toInt().toString() + ".png"
+    val file = source + "back" + (Math.random()*6+1).toInt().toString() + ".png"
     private val randomSprite = ImageIcon(File(file).absolutePath).image
 
-    private val randNum = (Math.random()*4).toInt()
+    private val randNum = (Math.random()*3+1).toInt()
     private val sprite1 = ImageIcon(File( source + "sprites/sprite" + randNum + "_1.png").absolutePath).image
     private val sprite2 = ImageIcon(File( source + "sprites/sprite" + randNum + "_2.png").absolutePath).image
     private val sprite3 = ImageIcon(File( source + "sprites/sprite" + randNum + "_3.png").absolutePath).image
@@ -38,7 +38,7 @@ class SpritePic(
         border = BorderFactory.createTitledBorder(data[8].toString())
         humPos = (Math.random() * (Pwidth - Pwidth/3) + 10).toInt()
         humHeight = data[5].toString().toDouble()/250
-        humSpeed = (Math.random() * 5 + 3).toInt()
+        humSpeed = (Math.random() * 7 + 3).toInt()
         backwards = Math.random() >= 0.5
         if (backwards) humSpeed = -humSpeed
         hPos = (Pheight*(1-humHeight)).toInt()
@@ -70,11 +70,11 @@ class SpritePic(
     }
 
     fun update(width: Int, height: Int) {
+        Pwidth = width
+        Pheight = height
         hPos = (Pheight*(1-humHeight)).toInt()
         hWidth = Pwidth/6
         hHeight = (Pheight*humHeight).toInt()
-        Pwidth = width
-        Pheight = height
         repaint()
     }
 

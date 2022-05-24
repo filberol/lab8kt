@@ -14,6 +14,11 @@ import java.time.ZonedDateTime
 import javax.swing.*
 import kotlin.reflect.KClass
 
+/**
+ * Class creating a registration window, connected
+ * to user properties.
+ * Invokes connection.
+ */
 class AddDialog(
     private val validator: FieldValidator,
     private val language: LanguageManager,
@@ -35,10 +40,9 @@ class AddDialog(
     private val degenerated: ArrayList<Any> = ArrayList()
 
     init {
-        val imageIcon = ImageIcon(
+        iconImage = ImageIcon(
             File("app/src/main/resources/images/icon.png")
-            .absolutePath)
-        iconImage = imageIcon.image
+                .absolutePath).image
         askFields()
     }
 
@@ -98,8 +102,7 @@ class AddDialog(
         val buttPanel = JPanel()
         buttPanel.add(JButton(language.getString("Add")).also {
             it.addActionListener {
-                fin()
-                dispose()
+                execute()
             }
         })
         buttPanel.add(JButton(language.getString("Cancel")).also {
@@ -112,7 +115,7 @@ class AddDialog(
         //KeyStrokes Setting
         allPanel.actionMap.put("confirm", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent?) {
-                fin()
+                execute()
             }
         })
         allPanel.actionMap.put("cancel", object : AbstractAction() {
@@ -128,7 +131,7 @@ class AddDialog(
         dialog.isVisible = true
     }
 
-    private fun fin() {
+    private fun execute() {
         degenerated.add(0,0)
         degenerated.add(4, ZonedDateTime.now())
         degenerated.add(12, user.getLogin())
@@ -136,5 +139,6 @@ class AddDialog(
             ServerAdd(language, collection, connection).execute(builder.buildObject(degenerated))
         } catch (_: ClassCastException) {}
         degenerated.clear()
+        dispose()
     }
 }

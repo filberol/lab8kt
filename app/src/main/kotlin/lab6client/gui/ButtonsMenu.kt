@@ -29,9 +29,10 @@ class ButtonsMenu(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder
 ): JPanel(
-    GridLayout(9,1)
+    GridLayout(10,1)
 ) {
     private val reLoginButton = JButton().also {
+        it.background = Color.LIGHT_GRAY
         it.addActionListener {
             try {
                 RegDialog(user, language, connection)
@@ -39,17 +40,26 @@ class ButtonsMenu(
             } catch (_: RuntimeException) {}
         }
     }
-    private val refreshButton = JButton().also {
-        it.background = Color.GREEN
-        it.addActionListener {
-            ServerAdd(language, collection, connection).execute(null)
-            screen.updateCurrentTab()
+    private val refreshButton = JButton().also { butt ->
+        butt.background = Color.GREEN
+        butt.addActionListener {
+            isVisible = false
+            (it.source as JButton).text = language.getString("Wait")
+            isVisible = true
+            val action = WaitForUpdate(language, collection, connection, screen, this)
+            Thread(action).start()
         }
     }
     private val addButton = JButton().also {
-        it.background = Color.GRAY
+        it.background = Color.MAGENTA
         it.addActionListener {
             AddDialog(validator, language, builder, user, collection, connection)
+        }
+    }
+    private val removeButton = JButton().also {
+        it.background = Color.ORANGE
+        it.addActionListener {
+            RemoveDialog(language, collection, connection)
         }
     }
     private val exitButton = JButton().also {
@@ -70,6 +80,7 @@ class ButtonsMenu(
         add(reLoginButton)
         add(refreshButton)
         add(addButton)
+        add(removeButton)
         add(exitButton)
         add(langPackButton)
         updateLabels()
@@ -79,6 +90,7 @@ class ButtonsMenu(
         reLoginButton.text = language.getString("Re-login")
         refreshButton.text = language.getString("Refresh")
         addButton.text = language.getString("Add")
+        removeButton.text = language.getString("Remove")
         exitButton.text = language.getString("Exit")
         repaint()
     }
@@ -94,7 +106,7 @@ class ButtonsMenu(
                 "Russian" -> "en_RU"
                 "English" -> "en_US"
                 "Norsk" -> "no_NO"
-                "Lietuvių" -> "Lt-LT"
+                "Lietuvių" -> "Lt_LT"
                 "Español" -> "es_EQ"
                 else -> "en_US"
             }
@@ -109,6 +121,20 @@ class ButtonsMenu(
             g2d.drawImage(ImageIcon(
                 File("app/src/main/resources/images/flag.png").absolutePath
             ).image, 0, 0, width, height, null)
+        }
+    }
+
+    class WaitForUpdate(
+        private val language: LanguageManager,
+        private val collection: CollectionManager,
+        private val connection: ConnectionHandler,
+        private val screen: HomeFrame,
+        private val buttons: ButtonsMenu
+    ): Runnable {
+        override fun run() {
+            ServerAdd(language, collection, connection).execute(null)
+            screen.updateCurrentTab()
+            buttons.updateLabels()
         }
     }
 }

@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
     val connection = ConnectionHandler(language, user, collection, waiter, config)
     //Initializing GUI
     var frame: HomeFrame? = null
-    if (!args.contains("Dmode=cli")) {
+    if (!args.contains("-Dmode=cli")) {
         RegDialog(user, language, connection)
         frame = HomeFrame(collection, language, user, connection, validator, builder)
     } else {
@@ -44,6 +44,9 @@ fun main(args: Array<String>) {
     val userScript = InteractiveMode(console, user)
     //Checking connection
     Thread.sleep(1000)
+    try {
+        frame!!.updateCurrentTab()
+    } catch (_: NullPointerException) {}
     if (connThread.isAlive) {
         if (connection.isConnected()) {
             println(language.getString("Queue"))

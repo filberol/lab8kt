@@ -26,6 +26,7 @@ class CollectionManager(
     fun addNotNull(element: Person?): Boolean {
         if (element != null) {
             collection.add(element)
+            ids.add(element.getID())
             return true
         }
         return false
@@ -43,7 +44,7 @@ class CollectionManager(
         return null
     }
 
-    fun removeByPosition(index: Int) = collection.removeAt(index)
+    fun findByPosition(index: Int): Int = collection[index].getID()
 
     fun getIndexBy(birthday: LocalDate): Int? {
         for (person in collection) {
@@ -52,6 +53,8 @@ class CollectionManager(
         }
         return null
     }
+
+    fun contains(id: Int): Boolean = ids.contains(id).also { println(ids) }
 
     //Sort, print - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     fun sortWith(comparator: Comparator<Person>): CollectionManager {
@@ -91,6 +94,7 @@ class CollectionManager(
     fun deleteByID(id: Int): Boolean {
         for(person in collection) {
             if (person.getID() == id) {
+                ids.remove(person.getID())
                 collection.remove(person)
                 return true
             }

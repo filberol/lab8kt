@@ -16,7 +16,7 @@ import javax.swing.*
 
 class HomeFrame(
     collection: CollectionManager,
-    language: LanguageManager,
+    private val language: LanguageManager,
     user: User,
     connection: ConnectionHandler,
     validator: FieldValidator,
@@ -25,11 +25,8 @@ class HomeFrame(
 
     private val consoleTab = TabConsole().getScrollPanedConsole()
 
-    private val tableManager = TabTable(collection)
-    private val tableTab = tableManager.getUpdatableTable()
-
-    private val graphManager = TabGrapInfo(collection)
-    private val graphTab = graphManager.getUpdatableGraph()
+    private val tableManagerPanel = TabTable(collection, language)
+    private val graphManagerPanel = TabGrapInfo(collection)
 
     //Adding Tabbed pane and adding tabs
     private val tabbed = JTabbedPane()
@@ -54,9 +51,10 @@ class HomeFrame(
         homePanel.border = BorderFactory.createTitledBorder("@filberol")
         add(homePanel)
 
-        tabbed.addTab(language.getString("Table"), tableTab)
-        tabbed.addTab(language.getString("Graphic"), graphTab)
-        updateTableTab()
+        tabbed.addTab(language.getString("Table"), tableManagerPanel)
+        tabbed.addTab(language.getString("Graphic"), graphManagerPanel)
+        graphManagerPanel.placeHolder()
+        tableManagerPanel.updateTable()
         homePanel.add(tabbed, BorderLayout.CENTER)
 
         //Adding different buttons
@@ -82,23 +80,26 @@ class HomeFrame(
             }
         })
 
-
         pack()
         isVisible = true
     }
 
-    fun updateTableTab() {
-        tableManager.updateTable()
-    }
+    fun updateTableTab() { tableManagerPanel.updateTable() }
 
     fun updateCurrentTab() {
         when (tabbed.selectedIndex) {
-            0 -> tableManager.updateTable()
-            1 -> graphManager.updateGraph()
+            0 -> tableManagerPanel.updateTable()
+            1 -> graphManagerPanel.updateGraph()
         }
     }
 
     fun updateLabels() {
+        title = language.getString("Title")
+        tabbed.setTitleAt(0, language.getString("Table"))
+        tabbed.setTitleAt(1, language.getString("Graphic"))
+        if (tabbed.tabCount > 2) {
+            tabbed.setTitleAt(2, language.getString("Console"))
+        }
         buttonMenu.updateLabels()
         repaint()
     }

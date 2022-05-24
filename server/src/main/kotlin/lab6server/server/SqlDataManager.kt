@@ -21,21 +21,23 @@ class SqlDataManager(
         val ser = element.serialize()
         val addString = "INSERT INTO gitData VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
         val addStat = connection.prepareStatement(addString)
-        addStat.setInt(1, collection.getVersion())  //CollVersion
-        addStat.setInt(2, ser[0].toInt())           //IdNum
-        addStat.setString(3, ser[1])                //Name
-        addStat.setDouble(4, ser[2].toDouble())     //CordX
-        addStat.setInt(5, ser[3].toInt())           //CordY
-        addStat.setString(6, ser[4])                //CrDate
-        addStat.setInt(7, ser[5].toInt())           //Height
-        addStat.setString(8, ser[6])                //Birthday
-        addStat.setString(9, ser[7])                //EyeColor
-        addStat.setString(10, ser[8])               //HairColor
-        addStat.setDouble(11, ser[9].toDouble())    //LocCordX
-        addStat.setDouble(12, ser[10].toDouble())   //LocCordY
-        addStat.setString(13, ser[11])              //LocName
-        addStat.setString(14, ser[12])              //Owner
-        addStat.setBoolean(15, ser[13].toBoolean()) //Action
+        addStat.apply {
+            setInt(1, collection.getVersion())  //CollVersion
+            setInt(2, ser[0].toInt())           //IdNum
+            setString(3, ser[1])                //Name
+            setDouble(4, ser[2].toDouble())     //CordX
+            setInt(5, ser[3].toInt())           //CordY
+            setString(6, ser[4])                //CrDate
+            setInt(7, ser[5].toInt())           //Height
+            setString(8, ser[6])                //Birthday
+            setString(9, ser[7])                //EyeColor
+            setString(10, ser[8])               //HairColor
+            setDouble(11, ser[9].toDouble())    //LocCordX
+            setDouble(12, ser[10].toDouble())   //LocCordY
+            setString(13, ser[11])              //LocName
+            setString(14, ser[12])              //Owner
+            setBoolean(15, ser[13].toBoolean()) //Action
+        }
         val res = addStat.executeUpdate()
         return res == 1
     }
