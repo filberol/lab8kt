@@ -5,6 +5,7 @@ import lab6client.data.utilities.CollectionManager
 import lab6client.data.utilities.FieldValidator
 import lab6client.data.utilities.LanguageManager
 import lab6client.data.utilities.ObjectBuilder
+import lab6client.run.Console
 import lab6client.server.ConnectionHandler
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -22,7 +23,7 @@ class HomeFrame(
     validator: FieldValidator,
     builder: ObjectBuilder
 ): JFrame(language.getString("Title")) {
-
+    private var console: Console? = null
     private val consoleTab = TabConsole().getScrollPanedConsole()
 
     private val tableManagerPanel = TabTable(collection, language)
@@ -103,4 +104,10 @@ class HomeFrame(
         buttonMenu.updateLabels()
         repaint()
     }
+
+    fun setConsole(con: Console) {
+        console = con
+    }
+
+    fun getConsole() = console!!
 }

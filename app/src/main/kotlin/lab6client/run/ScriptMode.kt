@@ -36,6 +36,7 @@ class ScriptMode(
                     console.eatCommand(command, commandFeed)
                 }
             }
+            scriptSet.remove(path)
         } else {
             println(language.getString("LoopExecute"))
         }

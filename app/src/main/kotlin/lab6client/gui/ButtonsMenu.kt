@@ -29,7 +29,7 @@ class ButtonsMenu(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder
 ): JPanel(
-    GridLayout(10,1)
+    GridLayout(11,1)
 ) {
     private val reLoginButton = JButton().also {
         it.background = Color.LIGHT_GRAY
@@ -62,6 +62,12 @@ class ButtonsMenu(
             RemoveDialog(language, collection, connection)
         }
     }
+    private val executeButton = JButton().also {
+        it.background = Color.BLUE
+        it.addActionListener {
+            ExecuteDialog(language, screen.getConsole())
+        }
+    }
     private val exitButton = JButton().also {
         it.background = Color.RED
         it.addActionListener {
@@ -81,6 +87,7 @@ class ButtonsMenu(
         add(refreshButton)
         add(addButton)
         add(removeButton)
+        add(executeButton)
         add(exitButton)
         add(langPackButton)
         updateLabels()
@@ -91,6 +98,7 @@ class ButtonsMenu(
         refreshButton.text = language.getString("Refresh")
         addButton.text = language.getString("Add")
         removeButton.text = language.getString("Remove")
+        executeButton.text = language.getString("ButtEx")
         exitButton.text = language.getString("Exit")
         repaint()
     }
