@@ -19,7 +19,7 @@ class SpritePic(
     private val timer = Timer(100,this)
 
     private val source = "app/src/main/resources/images/"
-    val file = source + "back" + (Math.random()*6+1).toInt().toString() + ".png"
+    val file = source + "backs/back" + (Math.random()*6+1).toInt().toString() + ".png"
     private val randomSprite = ImageIcon(File(file).absolutePath).image
 
     private val randNum = (Math.random()*3+1).toInt()

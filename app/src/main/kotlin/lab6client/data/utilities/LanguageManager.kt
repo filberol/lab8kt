@@ -1,28 +1,26 @@
 package lab6client.data.utilities
 
-import java.io.InputStreamReader
-import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.Properties
 import java.util.Locale
+import java.util.MissingResourceException
+import java.util.ResourceBundle
 
 
 /**
- * Class holds PROPERTY FILE WITH UTF-8 SUPPORTED with localisation.
+ * Class holds ListResourceBundle managment
  */
 class LanguageManager {
-    private var langPackMap: Properties = Properties()
-    private val langSource = "app/src/main/resources/lang/localization"
-    private var locale = Locale.getDefault().toString()
+    private var locale = Locale.getDefault()
+    private lateinit var bundle: ResourceBundle
 
     init {
         setLanguage(locale)
     }
 
-    fun setLanguage(localeIn: String) {
+    fun setLanguage(localeIn: Locale) {
         try {
-            langPackMap.load(InputStreamReader(FileInputStream("${langSource}_$localeIn.config")))
+            bundle = ResourceBundle.getBundle("lab6client.lang.localization", localeIn)
         } catch (e: FileNotFoundException) {
             println("Language File does not exist")
         } catch (e: IOException) {
@@ -30,5 +28,11 @@ class LanguageManager {
         }
     }
 
-    infix fun getString(s: String): String = langPackMap.getProperty(s)
+    infix fun getString(s: String): String {
+        return try {
+            bundle.getString(s)
+        } catch (e: MissingResourceException) {
+            "PlaceholderString"
+        }
+    }
 }

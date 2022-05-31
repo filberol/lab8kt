@@ -23,6 +23,5 @@ class FieldContainer {
         Float::class,       //CordY
         String::class       //LocName
     )
-
     fun getFieldTable() = userFieldTable
 }

@@ -1,3 +1,4 @@
 .gradle
 .idea
 build
+/app/src/main/kotlin/lab6client/gui/guides/

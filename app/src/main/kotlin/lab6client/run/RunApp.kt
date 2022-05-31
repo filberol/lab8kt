@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     //Initializing GUI
     var frame: HomeFrame? = null
     if (!args.contains("-Dmode=cli")) {
-        RegDialog(user, language, connection)
+        RegDialog(user, language, connection, true)
         frame = HomeFrame(collection, language, user, connection, validator, builder)
     } else {
         user.readVars()

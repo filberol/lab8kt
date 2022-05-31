@@ -33,6 +33,6 @@ data class Person(
     fun serialize(): List<String> = listOf(
             Id.toString(), Name, Coordinates.getX().toString(), Coordinates.getY().toString(),
             CreationDate.toString(), Height.toString(), Birthday.toString(), EyeColor.toString(),
-            HairColor.toString(), Location.getX(), Location.getY(), Location.getName(), Owner,
-            action.toString())
+            HairColor.toString(), Location.getX().toString(), Location.getY().toString(), Location.getName(),
+            Owner, action.toString())
 }

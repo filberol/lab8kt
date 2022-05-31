@@ -1,5 +1,7 @@
 package lab6client.data.utilities
 
+import common.objects.EyeColor
+import common.objects.HairColor
 import common.objects.Person
 import java.time.LocalDate
 
@@ -86,6 +88,9 @@ class CollectionManager(
                 .sortedBy { it.name }
                 .filter { it.name != "action" }
                 .map { field -> field.get(element) }
+                .map { if (it::class == EyeColor::class || it::class == HairColor::class) {
+                    language.getString(it.toString())
+                } else { it } }
                 .toTypedArray()
         }.toTypedArray()
     }

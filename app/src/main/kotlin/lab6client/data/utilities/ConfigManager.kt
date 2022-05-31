@@ -4,7 +4,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.Properties
+import java.util.*
 
 /**
  * Class stores the config for client, saved in file.
@@ -23,10 +23,11 @@ class ConfigManager(language: LanguageManager) {
         } catch (e: IOException) {
             println(language.getString("ConfigError"))
         }
-        language.setLanguage(config.getProperty("Language"))
+        val locale = config.getProperty("Language").split("_")
+        language.setLanguage(Locale(locale[0], locale[1]))
     }
     private fun setDefaults() {
-        config["Language"] = "en_EN"
+        config["Language"] = "en_US"
         config["Mode"] = "standalone"
         config["HistoryLength"] = "7"
         config["HistoryLog"] = "true"

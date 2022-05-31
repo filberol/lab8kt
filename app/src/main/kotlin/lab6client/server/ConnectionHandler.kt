@@ -52,6 +52,7 @@ class ConnectionHandler(
      */
     private fun tryToConnect() {
         processing = true
+        collection.clear()
         if (attempts > 0) {
             println(language.getString("Reconnecting"))
         }

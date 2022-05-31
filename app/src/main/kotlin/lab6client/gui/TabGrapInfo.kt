@@ -2,28 +2,34 @@ package lab6client.gui
 
 import common.objects.Person
 import lab6client.data.utilities.CollectionManager
+import lab6client.data.utilities.LanguageManager
 import java.awt.*
 import java.awt.event.*
-import java.io.File
 import javax.swing.BorderFactory
-import javax.swing.ImageIcon
+import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.SwingConstants
 import kotlin.math.floor
 import kotlin.math.sqrt
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 class TabGrapInfo(
-    private val collection: CollectionManager
+    private val collection: CollectionManager,
+    private val language: LanguageManager
 ): JPanel(GridLayout()) {
-    private val placeHolder = PlaceHolder()
-
+    private val textFont = Font("SansSerif", Font.ITALIC, 14)
     private var innerPanel = constructGraph()
 
     init { add(innerPanel) }
 
     private fun constructGraph(): JPanel {
-        val grid = estimateGridLayout() ?: return JPanel()
+        val grid = estimateGridLayout() ?: return JPanel(GridLayout()).also { pan ->
+            pan.background = Color(0xC8DDF2)
+            pan.add(JLabel(language.getString("EmptyCollection"), SwingConstants.CENTER).also {
+                it.font = textFont
+            })
+        }
         return JPanel(
             GridLayout(grid.first, grid.second)).also { it ->
             var estimated = estimateWidthAndHeight()
@@ -44,6 +50,10 @@ class TabGrapInfo(
                         }
                         override fun mouseExited(e: MouseEvent?) {
                             sprite.stopAnimation()
+                        }
+
+                        override fun mouseClicked(e: MouseEvent?) {
+                            //UpdateDialog(el)
                         }
                     })
                     val fieldTable = reflectTableColumns(Person::class)
@@ -93,34 +103,12 @@ class TabGrapInfo(
         }
     }
 
-    fun placeHolder() { add(placeHolder, BorderLayout.CENTER) }
-
     fun updateGraph() {
-        remove(placeHolder)
         remove(innerPanel)
         innerPanel = constructGraph()
 
         isVisible = false
         add(innerPanel)
         isVisible = true
-    }
-
-    class PlaceHolder: JPanel() {
-        private val imgSource = ImageIcon(File(
-            "app/src/main/resources/images/load.png").absolutePath).image
-
-        init {
-            addComponentListener(object : ComponentAdapter() {
-                override fun componentResized(e: ComponentEvent?) {
-                    repaint()
-                }
-            })
-        }
-
-        override fun paint(g: Graphics?) {
-            val g2d = g as Graphics2D
-            g2d.drawImage(imgSource, 0, height/2, 50, 50, null)
-        }
-
     }
 }

@@ -10,8 +10,8 @@ data class Location(
     fun toTable(): String {
         return String.format("%3.2f %3.2f | %25s", x, y, name)
     }
-    fun getX() = x.toString()
-    fun getY() = y.toString()
+    fun getX() = x
+    fun getY() = y
     fun getName() = name
 
     override fun toString(): String {

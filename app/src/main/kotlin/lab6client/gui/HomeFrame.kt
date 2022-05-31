@@ -27,10 +27,11 @@ class HomeFrame(
     private val consoleTab = TabConsole().getScrollPanedConsole()
 
     private val tableManagerPanel = TabTable(collection, language)
-    private val graphManagerPanel = TabGrapInfo(collection)
+    private val graphManagerPanel = TabGrapInfo(collection, language)
+    private val coordGraphInfo = CoordGraphInfo(collection)
 
     //Adding Tabbed pane and adding tabs
-    private val tabbed = JTabbedPane()
+    private val tabbed = CustJTabbedPane(graphManagerPanel, coordGraphInfo)
 
     private val buttonMenu = ButtonsMenu(
         language, user, connection, collection, this, validator, builder
@@ -54,7 +55,7 @@ class HomeFrame(
 
         tabbed.addTab(language.getString("Table"), tableManagerPanel)
         tabbed.addTab(language.getString("Graphic"), graphManagerPanel)
-        graphManagerPanel.placeHolder()
+        tabbed.addTab(language.getString("CoordinateInf"), coordGraphInfo)
         tableManagerPanel.updateTable()
         homePanel.add(tabbed, BorderLayout.CENTER)
 
@@ -91,6 +92,7 @@ class HomeFrame(
         when (tabbed.selectedIndex) {
             0 -> tableManagerPanel.updateTable()
             1 -> graphManagerPanel.updateGraph()
+            2 -> coordGraphInfo.updateCoordinates()
         }
     }
 
@@ -98,10 +100,13 @@ class HomeFrame(
         title = language.getString("Title")
         tabbed.setTitleAt(0, language.getString("Table"))
         tabbed.setTitleAt(1, language.getString("Graphic"))
-        if (tabbed.tabCount > 2) {
-            tabbed.setTitleAt(2, language.getString("Console"))
+        tabbed.setTitleAt(2, language.getString("CoordinateInf"))
+        if (tabbed.tabCount > 3) {
+            tabbed.setTitleAt(3, language.getString("Console"))
         }
         buttonMenu.updateLabels()
+        tableManagerPanel.updateColumnLabels()
+        tableManagerPanel.updateFilterBox()
         repaint()
     }
 
@@ -110,4 +115,19 @@ class HomeFrame(
     }
 
     fun getConsole() = console!!
+
+    class CustJTabbedPane(
+        private val graph: TabGrapInfo,
+        private val coord: CoordGraphInfo
+    ): JTabbedPane() {
+        private var graphIsInit = false
+        private var coordIsInit = false
+        override fun setSelectedIndex(index: Int) {
+            super.setSelectedIndex(index)
+            when (index) {
+                1 -> if (!graphIsInit) {graph.updateGraph(); graphIsInit = true}
+                2 -> if (!coordIsInit) {coord.updateCoordinates(); coordIsInit = true}
+            }
+        }
+    }
 }

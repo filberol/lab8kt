@@ -14,6 +14,7 @@ import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
+import java.util.Locale
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JComboBox
@@ -29,7 +30,7 @@ class ButtonsMenu(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder
 ): JPanel(
-    GridLayout(11,1)
+    GridLayout(12,1)
 ) {
     private val reLoginButton = JButton().also {
         it.background = Color.LIGHT_GRAY
@@ -62,6 +63,12 @@ class ButtonsMenu(
             RemoveDialog(language, collection, connection)
         }
     }
+    private val updateButton = JButton().also {
+        it.background = Color.CYAN
+        it.addActionListener {
+            UpdateDialog(validator, language, builder, user, collection, connection)
+        }
+    }
     private val executeButton = JButton().also {
         it.background = Color.BLUE
         it.addActionListener {
@@ -74,7 +81,7 @@ class ButtonsMenu(
             exitProcess(0)
         }
     }
-    private val langs = arrayOf("Русский", "Russian", "English", "Norsk", "Lietuvių", "Español")
+    private val langs = arrayOf("Русский", "English", "Norsk", "Lietuvių", "Español")
     private val langPackButton = LangComboBox(langs).also {
         it.selectedIndex = 0
         it.addActionListener(LangMenu(language, screen))
@@ -87,6 +94,7 @@ class ButtonsMenu(
         add(refreshButton)
         add(addButton)
         add(removeButton)
+        add(updateButton)
         add(executeButton)
         add(exitButton)
         add(langPackButton)
@@ -98,6 +106,7 @@ class ButtonsMenu(
         refreshButton.text = language.getString("Refresh")
         addButton.text = language.getString("Add")
         removeButton.text = language.getString("Remove")
+        updateButton.text = language.getString("Update")
         executeButton.text = language.getString("ButtEx")
         exitButton.text = language.getString("Exit")
         repaint()
@@ -110,13 +119,12 @@ class ButtonsMenu(
         override fun actionPerformed(e: ActionEvent?) {
             val source = e!!.source as JComboBox<*>
             val locale = when(source.selectedItem?.toString()) {
-                "Русский" -> "ru_RU"
-                "Russian" -> "en_RU"
-                "English" -> "en_US"
-                "Norsk" -> "no_NO"
-                "Lietuvių" -> "Lt_LT"
-                "Español" -> "es_EQ"
-                else -> "en_US"
+                "Русский" -> Locale("ru", "RU")
+                "English" -> Locale("en", "US")
+                "Norsk" -> Locale("no", "NO")
+                "Lietuvių" -> Locale("Lt", "LT")
+                "Español" -> Locale("es", "EQ")
+                else -> Locale("en", "US")
             }
             language.setLanguage(locale)
             screen.updateLabels()
