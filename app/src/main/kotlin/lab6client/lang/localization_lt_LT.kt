@@ -76,7 +76,16 @@ class localization_lt_LT: ListResourceBundle() {
         arrayOf("Id", "Id"),
         arrayOf("Location", "Vieta"),
         arrayOf("Name", "Vardas"),
-        arrayOf("Owner", "Savininkas")
+        arrayOf("Owner", "Savininkas"),
+        arrayOf("CoordinateInf", "Koordinatės informacija"),
+        arrayOf("CFile", "Rasti..."),
+        arrayOf("Blue", "Mėlyna"),
+        arrayOf("Orange", "Orange"),
+        arrayOf("Brown", "Oranžinė"),
+        arrayOf("Red", "Raudona"),
+        arrayOf("Yellow", "Geltona"),
+        arrayOf("ChoTitle", "Failo scenarijus"),
+        arrayOf("ChoFilt", "Tekstiniai failai (*.txt)")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

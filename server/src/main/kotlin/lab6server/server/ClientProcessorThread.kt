@@ -22,6 +22,7 @@ class ClientProcessorThread(
     private val sender: ObjectOutputStream
 ): Runnable {
     private var active = true
+    private val dataBase = collection.getSql()
 
     override fun run() {
         while (active) {
@@ -33,35 +34,40 @@ class ClientProcessorThread(
         try {
             val req = receiver.readObject() as Request
             println(req)
-            //Action logic
-
-            //CheckUser
-            if (collection.getSql().userManager.checkAddUser(req.getUser())) {
-                //Add or delete element
-                val contain = req.geElement()
-                if (contain != null) {
-                    //Add if id = 0
-                    synchronized(collection) {
-                        if (contain.getID() == 0) {
-                            contain.setID(collection.getFreeID())
-                            collection.addToDb(contain)
-                            //Delete if id !=0
-                        } else {
-                            collection.deleteByID(contain)
+            //Giving answer
+            if (dataBase.userManager.checkUserExist(req.getUser())) {
+                if (dataBase.userManager.checkUserPassword(req.getUser())) {
+                    val contain = req.geElement()
+                    if (contain != null) {
+                        //Add if id = 0
+                        synchronized(collection) {
+                            if (contain.getID() == 0) {
+                                contain.setID(collection.getFreeID())
+                                collection.addToDb(contain)
+                                //Delete if id !=0
+                            } else {
+                                collection.deleteByID(contain)
+                            }
                         }
                     }
-                }
-                //Common answer
+                    //Common answer
 
-                //Reaction depends on active token
-                if (tokens.checkPopToken(req.getUser().getToken())) {
-                    giveAnswer(req.getVer(), "Done")
+                    //Reaction depends on active token
+                    if (tokens.checkPopToken(req.getUser().getToken())) {
+                        giveAnswer(req.getVer(), "Done")
+                    } else {
+                        giveAnswer(0, "WrToken", true)
+                    }
                 } else {
-                    giveAnswer(0, "SucAcc", true)
+                    giveDenial("WrPass")
                 }
             } else {
-                //Create Account automatically
-                giveAnswer(req.getVer(), "NewAcc")
+                if (req.getRegister()) {
+                    dataBase.userManager.addUser(req.getUser())
+                    giveAnswer(0, "SucAcc", true)
+                } else {
+                    giveDenial("WrPass")
+                }
             }
         } catch (e: ClassCastException) {
             println(language.getString("DataLoss"))
@@ -74,6 +80,51 @@ class ClientProcessorThread(
         }
     }
 
+//    private fun processOffRequest() {
+//        try {
+//            val req = receiver.readObject() as Request
+//            println(req)
+//            //Action logic
+//
+//            //CheckUser
+//            if (collection.getSql().userManager.checkUserPassword(req.getUser())) {
+//                //Add or delete element
+//                val contain = req.geElement()
+//                if (contain != null) {
+//                    //Add if id = 0
+//                    synchronized(collection) {
+//                        if (contain.getID() == 0) {
+//                            contain.setID(collection.getFreeID())
+//                            collection.addToDb(contain)
+//                            //Delete if id !=0
+//                        } else {
+//                            collection.deleteByID(contain)
+//                        }
+//                    }
+//                }
+//                //Common answer
+//
+//                //Reaction depends on active token
+//                if (tokens.checkPopToken(req.getUser().getToken())) {
+//                    giveAnswer(req.getVer(), "Done")
+//                } else {
+//                    giveAnswer(0, "SucAcc", true)
+//                }
+//            } else {
+//                //Create Account automatically
+//                giveAnswer(req.getVer(), "NewAcc")
+//            }
+//        } catch (e: ClassCastException) {
+//            println(language.getString("DataLoss"))
+//        } catch (e: EOFException) {
+//            println(language.getString("disconnected"))
+//            active = false
+//        } catch (e: SocketException) {
+//            println(language.getString("disconnected"))
+//            active = false
+//        }
+//    }
+
     private fun giveAnswer(collVer: Int, res: String, truncate: Boolean = false) {
         if (truncate) sender.writeObject(Answer(null, tokens.generateAddToken(),
             -1))
@@ -82,5 +133,9 @@ class ClientProcessorThread(
         }.forEach(sender::writeObject)
         sender.writeObject(res)
 
+    }
+
+    private fun giveDenial(message: String) {
+        sender.writeObject(message)
     }
 }

@@ -28,7 +28,7 @@ class HomeFrame(
 
     private val tableManagerPanel = TabTable(collection, language)
     private val graphManagerPanel = TabGrapInfo(collection, language)
-    private val coordGraphInfo = CoordGraphInfo(collection)
+    private val coordGraphInfo = TabCoordGraphInfo(collection, language)
 
     //Adding Tabbed pane and adding tabs
     private val tabbed = CustJTabbedPane(graphManagerPanel, coordGraphInfo)
@@ -92,7 +92,7 @@ class HomeFrame(
         when (tabbed.selectedIndex) {
             0 -> tableManagerPanel.updateTable()
             1 -> graphManagerPanel.updateGraph()
-            2 -> coordGraphInfo.updateCoordinates()
+            2 -> coordGraphInfo.updateColorMap()
         }
     }
 
@@ -118,7 +118,7 @@ class HomeFrame(
 
     class CustJTabbedPane(
         private val graph: TabGrapInfo,
-        private val coord: CoordGraphInfo
+        private val coord: TabCoordGraphInfo
     ): JTabbedPane() {
         private var graphIsInit = false
         private var coordIsInit = false
@@ -126,7 +126,7 @@ class HomeFrame(
             super.setSelectedIndex(index)
             when (index) {
                 1 -> if (!graphIsInit) {graph.updateGraph(); graphIsInit = true}
-                2 -> if (!coordIsInit) {coord.updateCoordinates(); coordIsInit = true}
+                2 -> if (!coordIsInit) {coord.updateColorMap(); coordIsInit = true}
             }
         }
     }

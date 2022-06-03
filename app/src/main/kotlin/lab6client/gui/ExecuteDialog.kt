@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent
 import java.io.File
 import java.io.FileNotFoundException
 import javax.swing.*
+import javax.swing.filechooser.FileNameExtensionFilter
 
 class ExecuteDialog(
     private val language: LanguageManager,
@@ -49,6 +50,10 @@ class ExecuteDialog(
                 field.foreground = Color.BLACK
             }
         })
+
+        fileChooser.dialogTitle = language.getString("ChoTitle")
+        fileChooser.fileFilter = FileNameExtensionFilter(language.getString("ChoFilt"), "txt")
+
         button.addActionListener { askPath() }
         okButton.addActionListener { execute() }
 

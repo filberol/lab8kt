@@ -2,6 +2,7 @@ package lab6client.gui
 
 import common.entities.User
 import lab6client.data.commands.server.ServerAdd
+import lab6client.data.commands.server.ServerRemoveByID
 import lab6client.data.utilities.*
 import lab6client.server.ConnectionHandler
 import java.awt.*
@@ -16,17 +17,19 @@ import javax.swing.*
  * to user properties.
  * Invokes connection.
  */
-class AddDialog(
+class UpdateDialog(
     validator: FieldValidator,
     private val language: LanguageManager,
     private val builder: ObjectBuilder,
     private val user: User,
     private val collection: CollectionManager,
-    private val connection: ConnectionHandler
+    private val connection: ConnectionHandler,
+    private var toUpdate: Int = 0
 ): JFrame() {
-    private val frameWidth = 700
-    private val frameHeight = 800
+    private val frameWidth = 600
+    private val frameHeight = 500
     private val scSize: Dimension = Toolkit.getDefaultToolkit().screenSize
+    private val textFont = Font("SansSerif", Font.ITALIC, 14)
 
     private val dataPanel = PersonDataChooser(validator, language)
     private var degenerated: ArrayList<Any> = ArrayList()
@@ -39,29 +42,46 @@ class AddDialog(
     }
 
     private fun askFields() {
-        val title = language.getString("Add")
+        val title = language.getString("Update")
 
         //Initializing Frame
         isAlwaysOnTop = true
         val dialog = JDialog(this, title,true)
-        dialog.minimumSize = Dimension(700, 800)
+        dialog.minimumSize = Dimension(frameWidth+130, frameHeight+110)
         dialog.isResizable = true
         dialog.defaultCloseOperation = DISPOSE_ON_CLOSE
         dialog.setBounds(
             scSize.width/2 - frameWidth/2,
             scSize.height/2 - frameHeight/2,
-            699, 799
+            frameWidth, frameHeight
         )
-        dialog.pack()
 
+        //Component placement
         val allPanel = JPanel(BorderLayout())
         allPanel.border = BorderFactory.createEmptyBorder(10,5,5,10)
-        allPanel.add(dataPanel, BorderLayout.CENTER)
         dialog.add(allPanel)
+
+        val idPanel = JPanel(BorderLayout())
+        idPanel.border = BorderFactory.createEmptyBorder(0,5,5,0)
+        var idCombo = JComboBox(arrayOf(0))
+        if (collection.getIds().size != 0) {
+            idCombo = JComboBox(collection.getIds().toTypedArray())
+            toUpdate = idCombo.getItemAt(0)
+        }
+        idCombo.addActionListener {
+            toUpdate = (it.source as JComboBox<*>).selectedItem as Int
+        }
+        idPanel.add(JLabel(language.getString("Id")).also {
+            it.font = textFont
+            it.horizontalAlignment = SwingConstants.CENTER
+        }, BorderLayout.WEST)
+        idPanel.add(idCombo, BorderLayout.CENTER)
+        allPanel.add(idPanel, BorderLayout.NORTH)
+        allPanel.add(dataPanel, BorderLayout.CENTER)
 
         //Buttons
         val buttPanel = JPanel()
-        buttPanel.add(JButton(language.getString("Add")).also {
+        buttPanel.add(JButton(language.getString("Update")).also {
             it.addActionListener {
                 execute()
             }
@@ -89,17 +109,18 @@ class AddDialog(
         inputMap.put(KeyStroke.getKeyStroke('\n'), "confirm")
         inputMap.put(KeyStroke.getKeyStroke(''), "cancel")
 
-        dialog.pack()
         dialog.isVisible = true
     }
 
     private fun execute() {
         try {
+            val id = toUpdate
             degenerated = dataPanel.getChosenValues()
             degenerated.add(0, 0)
             degenerated.add(4, ZonedDateTime.now())
             degenerated.add(12, user.getLogin())
             val obj = builder.buildObject(degenerated)
+            ServerRemoveByID(language, collection, connection).execute(id)
             ServerAdd(language, collection, connection).execute(obj)
         } catch (_: Exception) {}
         degenerated.clear()

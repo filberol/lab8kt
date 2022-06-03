@@ -76,7 +76,16 @@ class localization_en_US: ListResourceBundle() {
         arrayOf("Id", "Id"),
         arrayOf("Location", "Location"),
         arrayOf("Name", "Name"),
-        arrayOf("Owner", "Owner")
+        arrayOf("Owner", "Owner"),
+        arrayOf("CoordinateInf", "Coordinate Info"),
+        arrayOf("CFile", "Find..."),
+        arrayOf("Blue", "Blue"),
+        arrayOf("Orange", "Orange"),
+        arrayOf("Brown", "Brown"),
+        arrayOf("Red", "Red"),
+        arrayOf("Yellow", "Yellow"),
+        arrayOf("ChoTitle", "File script"),
+        arrayOf("ChoFilt", "Text files (*.txt)")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

@@ -76,7 +76,16 @@ class localization_es_EQ: ListResourceBundle() {
         arrayOf("Id", "Id"),
         arrayOf("Location", "Ubicación"),
         arrayOf("Name", "Nombre"),
-        arrayOf("Owner", "Dueño(a)")
+        arrayOf("Owner", "Dueño(a)"),
+        arrayOf("CoordinateInf", "Información de coordenadas"),
+        arrayOf("CFile", "Encontrar..."),
+        arrayOf("Blue", "Azul"),
+        arrayOf("Orange", "Naranja"),
+        arrayOf("Brown", "Marrón"),
+        arrayOf("Red", "Rojo"),
+        arrayOf("Yellow", "Amarillo"),
+        arrayOf("ChoTitle", "Guión de archivo"),
+        arrayOf("ChoFilt", "Archivos de texto (*.txt)")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

@@ -25,6 +25,7 @@ class localization: ListResourceBundle() {
         arrayOf("DataIOError", " - Unhandled IOException while reading the data file. No data will be loaded"),
         arrayOf("EmptyCollection", " Collection is empty!"),
         arrayOf("Done", " Done."),
+        arrayOf("WtToken", "Updated collection."),
         arrayOf("Total", " Total - %d elements"),
         arrayOf("FieldList", "Name,Coordinate X - Double,Coordinate Y - Integer,Height,Birthday/Example>2020-06-22,Eye Color/BLUE ORANGE BROWN,Hair Color/RED BLUE YELLOW ORANGE,Location Coordinate X - Float,Location Coordinate Y - Float,Location Name"),
         arrayOf("TypeField", " Please enter field>"),
@@ -77,14 +78,15 @@ class localization: ListResourceBundle() {
         arrayOf("Location", "Location"),
         arrayOf("Name", "Name"),
         arrayOf("Owner", "Owner"),
-        //
         arrayOf("CoordinateInf", "Coordinate Info"),
         arrayOf("CFile", "Find..."),
         arrayOf("Blue", "Blue"),
         arrayOf("Orange", "Orange"),
         arrayOf("Brown", "Brown"),
         arrayOf("Red", "Red"),
-        arrayOf("Yellow", "Yellow")
+        arrayOf("Yellow", "Yellow"),
+        arrayOf("ChoTitle", "File script"),
+        arrayOf("ChoFilt", "Text files (*.txt)")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

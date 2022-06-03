@@ -76,7 +76,16 @@ class localization_ru_RU: ListResourceBundle() {
         arrayOf("Id", "Id"),
         arrayOf("Location", "Название места"),
         arrayOf("Name", "Имя"),
-        arrayOf("Owner", "Владелец")
+        arrayOf("Owner", "Владелец"),
+        arrayOf("CoordinateInf", "Координатное представление"),
+        arrayOf("CFile", "Обзор..."),
+        arrayOf("Blue", "Голубой"),
+        arrayOf("Orange", "Оранжевый"),
+        arrayOf("Brown", "Коричневый"),
+        arrayOf("Red", "Красный"),
+        arrayOf("Yellow", "Желтый"),
+        arrayOf("ChoTitle", "Выполнить"),
+        arrayOf("ChoFilt", "Текстовые файлы (*.txt)")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

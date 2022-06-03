@@ -63,7 +63,7 @@ class ConnectionHandler(
             serverReceiver = ObjectInputStream(socketChannel.socket().getInputStream())
             println(language.getString("ConnectionAccept"))
             connect = true
-            createRequest(Request(user, null, 0))
+            createRequest(Request(user, null, 0, true))
             attempts = 0
         } catch (e: IllegalArgumentException) {
             println(language.getString("ConnectionFalse"))

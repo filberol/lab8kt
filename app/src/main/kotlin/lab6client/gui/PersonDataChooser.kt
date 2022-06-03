@@ -2,7 +2,7 @@ package lab6client.gui
 
 import common.objects.EyeColor
 import common.objects.HairColor
-import lab6client.data.utilities.FieldContainer
+import lab6client.data.utilities.FieldValidator
 import lab6client.data.utilities.LanguageManager
 import java.awt.*
 import java.awt.event.ActionEvent
@@ -16,49 +16,54 @@ import kotlin.reflect.KClass
 
 
 class PersonDataChooser(
+    validator: FieldValidator,
     language: LanguageManager
-): JPanel(GridLayout(0, 2,10,10)) {
-    //private val cont = FieldContainer()
-    //private val fields = cont.getFieldTable()
+): JPanel(BorderLayout()) {
     private val names = language.getString("FieldList")
-        .split(",").map { it.split('/')[0] }
+        .split(",").map { it.split('-', '/')[0].trim() }
 
     private val textFont = Font("SansSerif", Font.ITALIC, 14)
 
     private val degenerated: ArrayList<Any> = ArrayList()
-    private val collector = FieldBuilder(degenerated, language)
+    private val collector = FieldBuilder(degenerated, language, validator)
+
+    private val labelPanel = JPanel(GridLayout(0, 1,10,10))
+    private val fieldPanel = JPanel(GridLayout(0, 1,10,10))
 
     init {
+        labelPanel.border = BorderFactory.createEmptyBorder(5,5,5,10)
+        fieldPanel.border = BorderFactory.createEmptyBorder(5,5,5,10)
         for (el in names.indices) {
             degenerated.add(el)
-            add(JLabel(language.getString(names[el])).also {
+            labelPanel.add(JLabel(names[el]).also {
                 it.font = textFont
                 it.horizontalAlignment = SwingConstants.CENTER
             })
-            add(
+            fieldPanel.add(
                 when (el) {
-                    0 -> collector.getStringChooser(el)
+                    0, 9 -> collector.getStringChooser(el)
                     1 -> collector.getShortNumberChooser(el, Double::class, -100, 100)
                     2 -> collector.getShortNumberChooser(el, Int::class, -100, 100)
                     3 -> collector.getShortNumberChooser(el, Int::class, 60,250)
                     4 -> collector.getDatePicker(el)
                     5 -> collector.getEyeColorChooser(el)
                     6 -> collector.getHairColorChooser(el)
-                    7 -> collector.getShortNumberChooser(el, Float::class, -100, 100)
-                    8 -> collector.getShortNumberChooser(el, Float::class, -100, 100)
-                    9 -> collector.getStringChooser(el)
+                    7, 8 -> collector.getShortNumberChooser(el, Float::class, -100, 100)
                     else -> collector.getStringChooser(el)
                 }
             )
         }
+        add(labelPanel, BorderLayout.WEST)
+        add(fieldPanel, BorderLayout.CENTER)
     }
 
-    //fun getChosenValues() {}
+    fun getChosenValues() = degenerated
     //fun setValues() {}
 
     class FieldBuilder(
         private val data: ArrayList<Any>,
-        private val language: LanguageManager
+        private val language: LanguageManager,
+        private val validator: FieldValidator
     ) {
         private val years = (1990..2010).map { it.toString() }.toTypedArray()
         private val months = (1..12)
@@ -72,6 +77,7 @@ class PersonDataChooser(
 
         //Text Field
         fun getStringChooser(pos: Int): JTextField {
+            data[pos] = "NullName"
             return JTextField(30).also {
                 it.addKeyListener(object : KeyAdapter() {
                     override fun keyTyped(e: KeyEvent?) {
@@ -84,6 +90,7 @@ class PersonDataChooser(
 
         //Number Slider
         fun getShortNumberChooser(pos: Int, toWhat: KClass<out Any>, min: Int, max: Int): JSlider {
+            data[pos] = validator.parseField("0", toWhat)!!
             return JSlider(min, max).also { slid ->
                 slid.minorTickSpacing = 5
                 slid.majorTickSpacing = 20
@@ -91,13 +98,14 @@ class PersonDataChooser(
                 slid.paintTicks = true
                 slid.paintTrack = true
                 slid.addChangeListener {
-                    data[pos] = (it.source as JSlider).value to toWhat
+                    data[pos] = validator.parseField((it.source as JSlider).value.toString(), toWhat)!!
                 }
             }
         }
 
         //Date Picker
         fun getDatePicker(pos: Int): JPanel {
+            data[pos] = LocalDate.parse("1990-01-01")
             val panel = JPanel()
             val yBox = JComboBox(years)
             val mBox = JComboBox(months)
@@ -107,8 +115,8 @@ class PersonDataChooser(
             mBox.addActionListener(listener)
             dBox.addActionListener(listener)
             yBox.isEditable = true
-            val prefSize = Dimension((yBox.preferredSize.width * 0.8604).toInt(), (yBox.preferredSize.height * 1.5).toInt())
-            yBox.preferredSize = prefSize
+            val prefSize = Dimension(mBox.preferredSize.width + 10, (yBox.preferredSize.height * 1.5).toInt())
+            yBox.preferredSize = Dimension(yBox.preferredSize.width, (yBox.preferredSize.height * 1.5).toInt())
             mBox.preferredSize = prefSize
             dBox.preferredSize = prefSize
             panel.apply {
@@ -138,22 +146,24 @@ class PersonDataChooser(
 
         //Enum Combo Box
         fun getEyeColorChooser(pos: Int): JComboBox<EyeColor> {
+            data[pos] = EyeColor.BlUE
             val box = JComboBox(EyeColor.values())
             box.addActionListener {
                 data[pos] = box.selectedItem!!
             }
-            box.renderer = MyComboBoxRenderer(language)
+            box.renderer = TextComboRenderer(language)
             return box
         }
         fun getHairColorChooser(pos: Int): JComboBox<HairColor> {
+            data[pos] = HairColor.BLUE
             val box = JComboBox(HairColor.values())
             box.addActionListener {
                 data[pos] = box.selectedItem!!
             }
-            box.renderer = MyComboBoxRenderer(language)
+            box.renderer = TextComboRenderer(language)
             return box
         }
-        class MyComboBoxRenderer(
+        class TextComboRenderer(
             private val language: LanguageManager
         ) : JLabel(), ListCellRenderer<Any?> {
             init {

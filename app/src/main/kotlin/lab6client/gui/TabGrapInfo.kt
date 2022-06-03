@@ -104,7 +104,7 @@ class TabGrapInfo(
     }
 
     fun updateGraph() {
-        remove(innerPanel)
+        removeAll()
         innerPanel = constructGraph()
 
         isVisible = false

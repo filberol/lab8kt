@@ -12,22 +12,33 @@ class SqlUserManager(
     /**
      * Check and if not exists add user.
      */
-    fun checkAddUser(user: User): Boolean {
+    fun checkUserPassword(user: User): Boolean {
         val query = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ?;"
         val stat = connection.prepareStatement(query)
         stat.setString(1, user.getLogin())
         stat.setString(2, user.getPass())
         val res = stat.executeQuery()
         res.next()
-        println("users found " + res.getInt("count"))
-        return if (res.getInt("count") == 1) true else {
-            val addString = "INSERT INTO users VALUES (?, ?);"
-            val addStat = connection.prepareStatement(addString)
-            addStat.setString(1, user.getLogin())
-            addStat.setString(2, user.getPass())
-            addStat.execute()
-            false
-        }
+        println("Users found " + res.getInt("count"))
+        return res.getInt("count") == 1
+    }
+
+    fun checkUserExist(user: User): Boolean {
+        val query = "SELECT COUNT(*) FROM users WHERE username = ?;"
+        val stat = connection.prepareStatement(query)
+        stat.setString(1, user.getLogin())
+        val res = stat.executeQuery()
+        res.next()
+        return res.getInt("count") == 1
+    }
+
+    fun addUser(user: User): Boolean {
+        val addString = "INSERT INTO users VALUES (?, ?);"
+        val addStat = connection.prepareStatement(addString)
+        addStat.setString(1, user.getLogin())
+        addStat.setString(2, user.getPass())
+        val res = addStat.executeUpdate()
+        return res == 1
     }
 
     fun truncateUsers() {

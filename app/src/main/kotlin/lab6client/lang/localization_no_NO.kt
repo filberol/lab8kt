@@ -75,7 +75,16 @@ class localization_no_NO: ListResourceBundle() {
         arrayOf("Id", "Id"),
         arrayOf("Location", "Plassering"),
         arrayOf("Name", "Navn"),
-        arrayOf("Owner", "Eieren")
+        arrayOf("Owner", "Eieren"),
+        arrayOf("CoordinateInf", "Koordinat info"),
+        arrayOf("CFile", "Finne..."),
+        arrayOf("Blue", "Blå"),
+        arrayOf("Orange", "Oransje"),
+        arrayOf("Brown", "Brun"),
+        arrayOf("Red", "Rød"),
+        arrayOf("Yellow", "Gul"),
+        arrayOf("ChoTitle", "Filskript"),
+        arrayOf("ChoFilt", "Tekstfiler (*.txt)")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties
