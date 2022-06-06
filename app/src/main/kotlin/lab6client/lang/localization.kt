@@ -57,8 +57,6 @@ class localization: ListResourceBundle() {
         arrayOf("Exit", "Exit"),
         arrayOf("Refresh", "Refresh"),
         arrayOf("Graphic", "Graphic Info"),
-        arrayOf("LoginRule", "Login should be at least 4 symbols"),
-        arrayOf("PassRule", "Password should be at least 4 symbols"),
         arrayOf("Add", "Add"),
         arrayOf("Cancel", "Cancel"),
         arrayOf("OK", "OK"),
@@ -86,7 +84,16 @@ class localization: ListResourceBundle() {
         arrayOf("Red", "Red"),
         arrayOf("Yellow", "Yellow"),
         arrayOf("ChoTitle", "File script"),
-        arrayOf("ChoFilt", "Text files (*.txt)")
+        arrayOf("ChoFilt", "Text files (*.txt)"),
+        arrayOf("...", "..."),
+        //
+        arrayOf("LoginPassRule", "Login and password should be at least 4 symbols"),
+        arrayOf("Login", "Login"),
+        arrayOf("Register", "Register"),
+        arrayOf("UseExi", "This login has already been taken."),
+        arrayOf("WrLogin", "Login or password are incorrect."),
+        arrayOf("Fail", "Connection failed. Try again later."),
+        arrayOf("SQlException", "Server DataBase error.")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

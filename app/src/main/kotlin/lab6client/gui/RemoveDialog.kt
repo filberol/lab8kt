@@ -6,7 +6,6 @@ import lab6client.data.utilities.LanguageManager
 import lab6client.server.ConnectionHandler
 import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.io.File
 import javax.swing.*
@@ -17,11 +16,9 @@ class RemoveDialog(
     private val connection: ConnectionHandler
 ): JFrame() {
     private val frameWidth = 320
-    private val frameHeight = 150
+    private val frameHeight = 120
     private val scSize: Dimension = Toolkit.getDefaultToolkit().screenSize
     private val textFont = Font("SansSerif", Font.ITALIC, 14)
-    private val fieldFont = Font("Monospaced", Font.BOLD, 14)
-    private val columns = 30
 
     private var toRemove: Int = 0
 
@@ -51,31 +48,23 @@ class RemoveDialog(
         panel.border = BorderFactory.createEmptyBorder(10,5,5,10)
         dialog.add(panel)
 
-        val fieldPanel = JPanel()
-        fieldPanel.add(JLabel(language.getString("AskId")).also {
+        val idPanel = JPanel(BorderLayout())
+        idPanel.border = BorderFactory.createEmptyBorder(0,5,5,0)
+        var idCombo = JComboBox(arrayOf(0))
+        if (collection.getIds().size != 0) {
+            idCombo = JComboBox(collection.getIds().toTypedArray())
+            toRemove = idCombo.getItemAt(0)
+        }
+        idCombo.addActionListener {
+            toRemove = (it.source as JComboBox<*>).selectedItem as Int
+        }
+        idPanel.add(JLabel(language.getString("Id")).also {
             it.font = textFont
-        })
-        fieldPanel.add(JTextField(columns).also {
-            it.font = fieldFont
-            it.addKeyListener(object : KeyAdapter() {
-                override fun keyTyped(e: KeyEvent?) {
-                    try {
-                        toRemove = (it.text + e!!.keyChar).toInt()
-                        println("$toRemove - ${collection.contains(toRemove)}")
-                        if (collection.contains(toRemove)) {
-                            it.foreground = Color.GREEN
-                        } else {
-                            it.foreground = Color.RED
-                        }
-                    } catch (_: NullPointerException) {
-                        it.foreground = Color.RED
-                    } catch (_: NumberFormatException) {
-                        it.foreground = Color.RED
-                    }
-                }
-            })
-        })
-        panel.add(fieldPanel, BorderLayout.CENTER)
+            it.horizontalAlignment = SwingConstants.CENTER
+            it.border = BorderFactory.createEmptyBorder(0,20, 0, 20)
+        }, BorderLayout.WEST)
+        idPanel.add(idCombo, BorderLayout.CENTER)
+        panel.add(idPanel)
 
         val buttPanel = JPanel()
         buttPanel.add(JButton(language.getString("Remove")).also {
@@ -111,6 +100,7 @@ class RemoveDialog(
     private fun execute() {
         if (collection.contains(toRemove)) {
             ServerRemoveByID(language, collection, connection).execute(toRemove)
+            dispose()
         }
     }
 }

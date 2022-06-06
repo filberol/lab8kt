@@ -85,7 +85,14 @@ class localization_ru_RU: ListResourceBundle() {
         arrayOf("Red", "Красный"),
         arrayOf("Yellow", "Желтый"),
         arrayOf("ChoTitle", "Выполнить"),
-        arrayOf("ChoFilt", "Текстовые файлы (*.txt)")
+        arrayOf("ChoFilt", "Текстовые файлы (*.txt)"),
+        arrayOf("LoginPassRule", "Логин и пароль должны содержать как минимум 4 символа."),
+        arrayOf("Login", "Вход"),
+        arrayOf("Register", "Регистрация"),
+        arrayOf("UseExi", "Имя пользователя уже занято"),
+        arrayOf("WrLogin", "Имя или пароль неправильны."),
+        arrayOf("Fail", "Ошибка подключения. Попробуйте позже"),
+        arrayOf("SQlException", "Ошибка базы данных сервера.")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

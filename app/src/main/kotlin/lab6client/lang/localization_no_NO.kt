@@ -84,7 +84,14 @@ class localization_no_NO: ListResourceBundle() {
         arrayOf("Red", "Rød"),
         arrayOf("Yellow", "Gul"),
         arrayOf("ChoTitle", "Filskript"),
-        arrayOf("ChoFilt", "Tekstfiler (*.txt)")
+        arrayOf("ChoFilt", "Tekstfiler (*.txt)"),
+        arrayOf("LoginPassRule", "Innlogging og passord skal bestå av minst 4 symboler"),
+        arrayOf("Login", "Logg Inn"),
+        arrayOf("Register", "Registrere"),
+        arrayOf("UseExi", "Denne påloggingen er allerede tatt."),
+        arrayOf("WrLogin", "Innlogging eller passord er feil."),
+        arrayOf("Fail", "Tilkoblingen mislyktes. Prøv igjen senere."),
+        arrayOf("SQlException", "Serverdatabasefeil.")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

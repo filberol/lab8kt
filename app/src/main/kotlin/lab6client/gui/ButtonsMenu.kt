@@ -7,18 +7,11 @@ import lab6client.data.utilities.FieldValidator
 import lab6client.data.utilities.LanguageManager
 import lab6client.data.utilities.ObjectBuilder
 import lab6client.server.ConnectionHandler
-import java.awt.Color
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.GridLayout
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.io.File
 import java.util.Locale
-import javax.swing.ImageIcon
-import javax.swing.JButton
-import javax.swing.JComboBox
-import javax.swing.JPanel
+import javax.swing.*
 import kotlin.system.exitProcess
 
 class ButtonsMenu(
@@ -30,8 +23,16 @@ class ButtonsMenu(
     private val validator: FieldValidator,
     private val builder: ObjectBuilder
 ): JPanel(
-    GridLayout(12,1)
+    GridLayout(13,1)
 ) {
+    private val textFont = Font("SansSerif", Font.ITALIC, 14)
+
+    private val userLabel = JLabel(user.getLogin()).also {
+        it.font = textFont
+        it.horizontalAlignment = JLabel.CENTER
+        it.border = BorderFactory.createLineBorder(Color.GRAY, 8)
+
+    }
     private val reLoginButton = JButton().also {
         it.background = Color.LIGHT_GRAY
         it.addActionListener {
@@ -82,7 +83,7 @@ class ButtonsMenu(
         }
     }
     private val langs = arrayOf("Русский", "English", "Norsk", "Lietuvių", "Español")
-    private val langPackButton = LangComboBox(langs).also {
+    private val langPackButton = JComboBox(langs).also {
         it.selectedIndex = 0
         it.addActionListener(LangMenu(language, screen))
     }
@@ -90,6 +91,7 @@ class ButtonsMenu(
     init {
         add(JPanel())
         add(JPanel())
+        add(userLabel)
         add(reLoginButton)
         add(refreshButton)
         add(addButton)
@@ -97,6 +99,8 @@ class ButtonsMenu(
         add(updateButton)
         add(executeButton)
         add(exitButton)
+        add(JPanel())
+        add(JPanel())
         add(langPackButton)
         updateLabels()
     }
@@ -131,14 +135,14 @@ class ButtonsMenu(
         }
     }
 
-    class LangComboBox(langs: Array<String>): JComboBox<String>(langs) {
-        override fun paint(g: Graphics?) {
-            val g2d = g as Graphics2D
-            g2d.drawImage(ImageIcon(
-                File("app/src/main/resources/images/flag.png").absolutePath
-            ).image, 0, 0, width, height, null)
-        }
-    }
+//    class LangComboBox(langs: Array<String>): JComboBox<String>(langs) {
+//        override fun paint(g: Graphics?) {
+//            val g2d = g as Graphics2D
+//            g2d.drawImage(ImageIcon(
+//                File("app/src/main/resources/images/flag.png").absolutePath
+//            ).image, 3, 3, width-6, height-6, null)
+//        }
+//    }
 
     class WaitForUpdate(
         private val language: LanguageManager,
@@ -153,4 +157,35 @@ class ButtonsMenu(
             buttons.updateLabels()
         }
     }
+
+//    class LanguageComboBoxRenderer(): JLabel(), ListCellRenderer<Any> {
+//
+//        init {
+//            isOpaque = true
+//            horizontalAlignment = CENTER
+//            verticalAlignment = CENTER
+//        }
+
+//        override fun getListCellRendererComponent(
+//            list: JList<out Any>?,
+//            value: Any?,
+//            index: Int,
+//            isSelected: Boolean,
+//            cellHasFocus: Boolean
+//        ): Component {
+//            val selectedIndex = value as Int
+//            if (list != null) {
+//                if (isSelected) {
+//                    background = list.selectionBackground
+//                    foreground = list.selectionForeground
+//                } else {
+//                    background = list.background
+//                    foreground = list.foreground
+//                }
+//            }
+//
+//                //val langImage = ImageIcon(File)
+//        }
+//
+//    }
 }

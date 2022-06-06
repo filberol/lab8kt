@@ -18,11 +18,11 @@ import javax.swing.*
 class HomeFrame(
     collection: CollectionManager,
     private val language: LanguageManager,
-    user: User,
+    private val user: User,
     connection: ConnectionHandler,
     validator: FieldValidator,
     builder: ObjectBuilder
-): JFrame(language.getString("Title")) {
+): JFrame("${language.getString("Title")} - ${user.getLogin()}") {
     private var console: Console? = null
     private val consoleTab = TabConsole().getScrollPanedConsole()
 
@@ -97,7 +97,7 @@ class HomeFrame(
     }
 
     fun updateLabels() {
-        title = language.getString("Title")
+        title = "${language.getString("Title")} - ${user.getLogin()}"
         tabbed.setTitleAt(0, language.getString("Table"))
         tabbed.setTitleAt(1, language.getString("Graphic"))
         tabbed.setTitleAt(2, language.getString("CoordinateInf"))

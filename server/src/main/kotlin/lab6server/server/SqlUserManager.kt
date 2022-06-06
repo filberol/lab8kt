@@ -32,7 +32,7 @@ class SqlUserManager(
         return res.getInt("count") == 1
     }
 
-    fun addUser(user: User): Boolean {
+    fun tryAddUser(user: User): Boolean {
         val addString = "INSERT INTO users VALUES (?, ?);"
         val addStat = connection.prepareStatement(addString)
         addStat.setString(1, user.getLogin())

@@ -85,7 +85,14 @@ class localization_es_EQ: ListResourceBundle() {
         arrayOf("Red", "Rojo"),
         arrayOf("Yellow", "Amarillo"),
         arrayOf("ChoTitle", "Guión de archivo"),
-        arrayOf("ChoFilt", "Archivos de texto (*.txt)")
+        arrayOf("ChoFilt", "Archivos de texto (*.txt)"),
+        arrayOf("LoginPassRule", "El nombre de usuario y la contraseña deben tener al menos 4 símbolos"),
+        arrayOf("Login", "Acceso"),
+        arrayOf("Register", "Registro"),
+        arrayOf("UseExi", "Este inicio de sesión ya se ha realizado."),
+        arrayOf("WrLogin", "Login or password are incorrect."),
+        arrayOf("Fail", "El inicio de sesión o la contraseña son incorrectos."),
+        arrayOf("SQlException", "Error de la base de datos del servidor.")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

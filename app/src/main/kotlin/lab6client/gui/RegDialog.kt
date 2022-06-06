@@ -19,18 +19,22 @@ class RegDialog(
     private val connManager: ConnectionHandler,
     private val startup: Boolean = false
 ): JFrame() {
-    private val frameWidth = 300
-    private val frameHeight = 180
+    private val frameWidth = 400
+    private val frameHeight = 220
     private val scSize: Dimension = Toolkit.getDefaultToolkit().screenSize
     private val textFont = Font("SansSerif", Font.ITALIC, 14)
     private val fieldFont = Font("Monospaced", Font.BOLD, 14)
-    private val columns = 30
+    private val columns = 37
 
     private lateinit var loginLabel: JLabel
     private lateinit var passLabel: JLabel
-    private lateinit var okButton: JButton
+    private lateinit var loginButton: JButton
+    private lateinit var registerButton: JButton
     private lateinit var cancButton: JButton
-    private lateinit var dialog: JDialog
+    private lateinit var dialog: CloseableJDialog
+    private lateinit var status: JTextArea
+
+    private var statusText = "..."
 
     init {
         title = language.getString("RegTitle")
@@ -44,14 +48,9 @@ class RegDialog(
         }
 
         //Dialog window
-        dialog = JDialog(this, title, true)
+        dialog = CloseableJDialog(this, title, startup)
         dialog.isResizable = false
-        dialog.defaultCloseOperation = JDialog.HIDE_ON_CLOSE
-        dialog.addWindowListener(object : WindowAdapter() {
-            override fun windowIconified(e: WindowEvent?) {
-                if (startup) dispose() else exitProcess(0)
-            }
-        })
+        dialog.defaultCloseOperation = JDialog.DISPOSE_ON_CLOSE
         dialog.setBounds(
             scSize.width/2 - frameWidth/2,
             scSize.height/2 - frameHeight/2,
@@ -122,20 +121,31 @@ class RegDialog(
         })
         panel.add(passField)
 
-        //Confirmation button
-        okButton = JButton(language.getString("OK")).also {
+        loginButton = JButton(language.getString("Login")).also {
             it.horizontalAlignment = JButton.LEFT
             it.addActionListener {
-                checkAndRead(loginField, passField)
+                setStatus("WaitPlease")
+                connManager.resetRegister()
+                checkAndConnect(loginField, passField)
             }
         }
-        panel.add(okButton)
+        panel.add(loginButton)
+
+        registerButton = JButton(language.getString("Register")).also {
+            it.horizontalAlignment = JButton.LEFT
+            it.addActionListener {
+                setStatus("WaitPlease")
+                connManager.setRegister()
+                checkAndConnect(loginField, passField)
+            }
+        }
+        panel.add(registerButton)
 
         //Cancel button
         cancButton = JButton(language.getString("Cancel")).also {
             it.horizontalAlignment = JButton.RIGHT
             it.addActionListener {
-                if (startup) exitProcess(0) else dispose()
+                dispose()
             }
         }
         panel.add(cancButton)
@@ -146,10 +156,19 @@ class RegDialog(
             it.addActionListener(LangMenu(language, this))
         })
 
+        status = JTextArea(statusText, 2, 28).also {
+            it.font = textFont
+            it.lineWrap = true
+            it.wrapStyleWord = true
+            it.isEditable = false
+            it.isOpaque = false
+        }
+        panel.add(status)
+
         //KeyStrokes Setting
         panel.actionMap.put("confirm", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent?) {
-                checkAndRead(loginField, passField)
+                checkAndConnect(loginField, passField)
             }
         })
         panel.actionMap.put("cancel", object : AbstractAction() {
@@ -165,19 +184,31 @@ class RegDialog(
         dialog.isVisible = true
     }
 
-    private fun checkAndRead(loginField: JTextField, passField: JPasswordField) {
+    private fun checkAndConnect(loginField: JTextField, passField: JPasswordField) {
         if (loginField.text.length >= 4 && passField.password.size >= 4) {
-            user.readVars(loginField.text, passField.password.toString())
-            dispose()
+            user.readVars(loginField.text, String(passField.password))
+            val res = connManager.tryToConnect()
+            if (res == "GotColl") { dialog.anywayDispose() } else { setStatus(res) }
+        } else {
+            setStatus("LoginPassRule")
         }
+        connManager.resetRegister()
+    }
+
+    private fun setStatus(value: String) {
+        statusText = value
+        status.text = language.getString(value)
+        repaint()
     }
 
     private fun updateLabels() {
         dialog.title = language.getString("RegTitle")
         loginLabel.text = language.getString("LoginLabel")
         passLabel.text = language.getString("PassLabel")
-        okButton.text = language.getString("OK")
+        loginButton.text = language.getString("Login")
+        registerButton.text = language.getString("Register")
         cancButton.text = language.getString("Cancel")
+        status.text = language.getString(statusText)
         repaint()
     }
 
@@ -206,6 +237,19 @@ class RegDialog(
             g2d.drawImage(ImageIcon(
                 File("app/src/main/resources/images/flag.png").absolutePath
             ).image, 0, 0, width, height, null)
+        }
+    }
+
+    class CloseableJDialog(
+        owner: JFrame,
+        diTitle: String,
+        private val startup: Boolean
+    ): JDialog(owner, diTitle, true) {
+        override fun dispose() {
+            if (startup) exitProcess(0) else super.dispose()
+        }
+        fun anywayDispose() {
+            super.dispose()
         }
     }
 }

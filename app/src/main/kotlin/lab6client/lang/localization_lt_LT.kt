@@ -52,7 +52,7 @@ class localization_lt_LT: ListResourceBundle() {
         arrayOf("Title", "Žmonių kolekcija"),
         arrayOf("LoginLabel", "|----<Prisijungti>----|"),
         arrayOf("PassLabel", "|--<Slaptažodis>--|"),
-        arrayOf("Re-login", "Pakartotinis prisijungimas"),
+        arrayOf("Re-login", "Pakartotinis"),
         arrayOf("Exit", "Išeiti"),
         arrayOf("Refresh", "Atnaujinti"),
         arrayOf("Graphic", "Grafinė informacija"),
@@ -85,7 +85,14 @@ class localization_lt_LT: ListResourceBundle() {
         arrayOf("Red", "Raudona"),
         arrayOf("Yellow", "Geltona"),
         arrayOf("ChoTitle", "Failo scenarijus"),
-        arrayOf("ChoFilt", "Tekstiniai failai (*.txt)")
+        arrayOf("ChoFilt", "Tekstiniai failai (*.txt)"),
+        arrayOf("LoginPassRule", "Prisijungimo vardą ir slaptažodį turi sudaryti bent 4 simboliai"),
+        arrayOf("Login", "Prisijungti"),
+        arrayOf("Register", "Registruotis"),
+        arrayOf("UseExi", "Šis prisijungimas jau priimtas."),
+        arrayOf("WrLogin", "Neteisingas prisijungimo vardas arba slaptažodis."),
+        arrayOf("Fail", "Nepavyko prisijungti. Pabandyti dar kartą vėliau."),
+        arrayOf("SQlException", "Serverio duomenų bazės klaida.")
     )
     override fun getContents(): Array<Array<Any>> {
         return properties

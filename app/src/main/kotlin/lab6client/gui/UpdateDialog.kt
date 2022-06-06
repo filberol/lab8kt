@@ -74,6 +74,7 @@ class UpdateDialog(
         idPanel.add(JLabel(language.getString("Id")).also {
             it.font = textFont
             it.horizontalAlignment = SwingConstants.CENTER
+            it.border = BorderFactory.createEmptyBorder(0,20, 0, 20)
         }, BorderLayout.WEST)
         idPanel.add(idCombo, BorderLayout.CENTER)
         allPanel.add(idPanel, BorderLayout.NORTH)

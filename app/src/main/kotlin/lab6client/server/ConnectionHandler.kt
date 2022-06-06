@@ -23,12 +23,13 @@ class ConnectionHandler(
     private val user: User,
     private val collection: CollectionManager,
     private val waiter: Object,
-    config: ConfigManager
+    config: ConfigManager,
+    private var register: Boolean = false
 ): Runnable {
     private val host: String = config.getAddress()
     private val port: Int = config.getPort()
     private val reconnectionTimeout: Long = 3000
-    private val maxReconnectionAttempts = 3
+    private val maxReconnectionAttempts = 2
     private lateinit var socketChannel: SocketChannel
     private lateinit var serverSender: ObjectOutputStream
     private lateinit var serverReceiver: ObjectInputStream
@@ -38,6 +39,8 @@ class ConnectionHandler(
     private var processing = false
     fun isConnected() = connect
     fun isProcessing() = processing
+    fun setRegister() { register = true }
+    fun resetRegister() { register = false }
 
     fun getUser() = user
 
@@ -50,7 +53,12 @@ class ConnectionHandler(
      * Sets the connection with server, providing timeout and first download.
      * Works in different Thread not in control of the class itself
      */
-    private fun tryToConnect() {
+    fun tryToConnect(): String {
+        try {
+            socketChannel.close()
+            serverSender.close()
+            serverReceiver.close()
+        } catch (_: UninitializedPropertyAccessException) {}
         processing = true
         collection.clear()
         if (attempts > 0) {
@@ -63,8 +71,8 @@ class ConnectionHandler(
             serverReceiver = ObjectInputStream(socketChannel.socket().getInputStream())
             println(language.getString("ConnectionAccept"))
             connect = true
-            createRequest(Request(user, null, 0, true))
             attempts = 0
+            return createRequest(Request(user, null, 0, register))
         } catch (e: IllegalArgumentException) {
             println(language.getString("ConnectionFalse"))
         } catch (e: IOException) {
@@ -83,27 +91,29 @@ class ConnectionHandler(
         }
         attempts = 0
         processing = false
+        return "Fail"
     }
 
     /**
      * Sends single request and goto multiple answers from server.
      */
-    fun createRequest(req: Request){
+    fun createRequest(req: Request): String{
         try {
             attempts = 0
             serverSender.reset()
             serverSender.writeObject(req)
-            processAnswer(collection)
+            return processAnswer(collection)
         } catch (e: IOException) {
             println(language.getString("RequestError"))
         }
+        return "ReqFail"
     }
 
     /**
      * Answer receive finished by string message.
      * Until that waits for answer.
      */
-    private fun processAnswer(coll: CollectionManager) {
+    private fun processAnswer(coll: CollectionManager): String {
         try {
             val answer = serverReceiver.readObject()
             //Check thr answer validity
@@ -122,18 +132,19 @@ class ConnectionHandler(
                 //Opening clear command for invalid token
                 } else if (answer.getVersion() < 0) {
                     collection.clear()
-                    processAnswer(coll)
+                    return processAnswer(coll)
                 }
             //Closing string answer
             } else {
-                println(language.getString(answer.toString()))
+                println(answer.toString())
+                return answer.toString()
             }
-            return
         } catch (e: ClassCastException) {
             println(language.getString("NoResponse"))
         } catch (e: IOException) {
             println(language.getString("RequestError"))
         }
+        return "GotColl"
     }
 
     fun close() {
