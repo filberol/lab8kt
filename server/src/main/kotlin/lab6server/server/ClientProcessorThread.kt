@@ -60,7 +60,7 @@ class ClientProcessorThread(
                         giveAnswer(0, "WrToken", true)
                     }
                 } else {
-                    giveDenial("UseExi")
+                    giveDenial("WrPass")
                 }
             } else {
                 if (req.getRegister()) {

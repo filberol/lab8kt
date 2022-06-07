@@ -84,7 +84,7 @@ class ButtonsMenu(
     }
     private val langs = arrayOf("Русский", "English", "Norsk", "Lietuvių", "Español")
     private val langPackButton = JComboBox(langs).also {
-        it.selectedIndex = 0
+        it.selectedIndex = langs.indexOf(language.getLocaleName())
         it.addActionListener(LangMenu(language, screen))
     }
 

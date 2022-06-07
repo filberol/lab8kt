@@ -105,8 +105,13 @@ class HomeFrame(
             tabbed.setTitleAt(3, language.getString("Console"))
         }
         buttonMenu.updateLabels()
-        tableManagerPanel.updateColumnLabels()
-        tableManagerPanel.updateFilterBox()
+//        if (tabbed.selectedComponent == tableManagerPanel) {
+//            tableManagerPanel.updateColumnLabels()
+//            tableManagerPanel.updateFilterBox()
+//            tableManagerPanel.updateTable()
+//        }
+        updateCurrentTab()
+
         repaint()
     }
 

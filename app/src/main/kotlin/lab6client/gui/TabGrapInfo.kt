@@ -11,8 +11,6 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import kotlin.math.floor
 import kotlin.math.sqrt
-import kotlin.reflect.KClass
-import kotlin.reflect.full.memberProperties
 
 class TabGrapInfo(
     private val collection: CollectionManager,
@@ -56,7 +54,7 @@ class TabGrapInfo(
                             //UpdateDialog(el)
                         }
                     })
-                    val fieldTable = reflectTableColumns(Person::class)
+                    val fieldTable = Reflector(language).reflectTableColumns(Person::class)
                     it.toolTipText = "<html>"
                     for (i in fieldTable.indices) {
                         it.toolTipText = it.toolTipText + "${fieldTable[i].split('/')[0]}: ${el[i]}<br>"
@@ -66,14 +64,6 @@ class TabGrapInfo(
 
             }
         }
-    }
-
-    private fun reflectTableColumns(element: KClass<out Any>): Array<String> {
-        return element.memberProperties
-            .sortedBy { it.name }
-            .map { it.name }
-            .filter { it != "action" }
-            .toTypedArray()
     }
 
     private fun estimateWidthAndHeight(): Pair<Int, Int> {

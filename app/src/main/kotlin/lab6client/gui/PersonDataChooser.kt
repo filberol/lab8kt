@@ -115,8 +115,8 @@ class PersonDataChooser(
             mBox.addActionListener(listener)
             dBox.addActionListener(listener)
             yBox.isEditable = true
-            val prefSize = Dimension(mBox.preferredSize.width + 10, (yBox.preferredSize.height * 1.5).toInt())
-            yBox.preferredSize = Dimension(yBox.preferredSize.width, (yBox.preferredSize.height * 1.5).toInt())
+            val prefSize = Dimension(mBox.preferredSize.width + 10, (yBox.preferredSize.height * 1.3).toInt())
+            yBox.preferredSize = Dimension(yBox.preferredSize.width, (yBox.preferredSize.height * 1.3).toInt())
             mBox.preferredSize = prefSize
             dBox.preferredSize = prefSize
             panel.apply {

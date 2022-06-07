@@ -90,13 +90,13 @@ class TabTable(
         }
     }
 
-    fun updateColumnLabels() {
-        val columnModel = table.columnModel
-        val columns = Reflector(language).reflectTableColumns(Person::class)
-        for (col in 0 until columnModel.columnCount) {
-            columnModel.getColumn(col).headerValue = columns[col]
-        }
-    }
+//    fun updateColumnLabels() {
+//        val columnModel = table.columnModel
+//        val columns = Reflector(language).reflectTableColumns(Person::class)
+//        for (col in 0 until columnModel.columnCount) {
+//            columnModel.getColumn(col).headerValue = columns[col]
+//        }
+//    }
 
     fun updateFilterBox() {
         subPanel.remove(comboBox)
@@ -111,6 +111,7 @@ class TabTable(
         isVisible = false
         add(pane, BorderLayout.CENTER)
         isVisible = true
+        updateFilterBox()
     }
 
     class PersonTableModel(

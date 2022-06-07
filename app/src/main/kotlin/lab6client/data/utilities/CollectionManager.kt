@@ -4,6 +4,8 @@ import common.objects.EyeColor
 import common.objects.HairColor
 import common.objects.Person
 import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Class-handler. Stores the collection and provides basic commands for them.
@@ -91,6 +93,8 @@ class CollectionManager(
                 .map { if (it::class == EyeColor::class || it::class == HairColor::class) {
                     language.getString(it.toString())
                 } else { it } }
+                .map { if (it::class == ZonedDateTime::class) {
+                    (it as ZonedDateTime).format(DateTimeFormatter.ofPattern("MM/dd/yyyy - HH:mm:ss z")) } else { it } }
                 .toTypedArray()
         }.toTypedArray()
     }

@@ -35,4 +35,15 @@ class LanguageManager {
             "PlaceholderString"
         }
     }
+
+    //arrayOf("Русский", "English", "Norsk", "Lietuvių", "Español")
+    fun getLocaleName(): String {
+        return when (bundle.locale.toString()) {
+            "ru_RU" -> "Русский"
+            "no_NO" -> "Norsk"
+            "lt_LT" -> "Lietuvių"
+            "es_EQ" -> "Español"
+            else -> "English"
+        }
+    }
 }

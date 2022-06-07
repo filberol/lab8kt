@@ -137,9 +137,10 @@ class TabCoordGraphInfo(
     }
 
     private fun getRandomOffset(): FloatArray {
-        return floatArrayOf((Math.random() * 300 - 150).toFloat(),
-            (Math.random() * 500).toFloat().coerceAtLeast(50.0f) - 50,
-            (Math.random() * 500).toFloat().coerceAtLeast(50.0f) - 50
+        return floatArrayOf(
+            (Math.random() * 200).toFloat().coerceAtLeast(50.0f),
+            (Math.random() * 200).toFloat().coerceAtLeast(50.0f),
+            (Math.random() * 200).toFloat().coerceAtLeast(50.0f),
         )
     }
 

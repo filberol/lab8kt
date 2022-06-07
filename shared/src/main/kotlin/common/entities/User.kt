@@ -1,7 +1,7 @@
 package common.entities
 
 import java.io.Serializable
-import java.security.MessageDigest
+//import java.security.MessageDigest
 import java.util.Scanner
 
 class User: Serializable {
@@ -20,18 +20,20 @@ class User: Serializable {
         print("Login: ")
         login = scanner.nextLine()
         print("Password: ")
-        password = encodePass(scanner.nextLine())
+//        password = encodePass(scanner.nextLine())
+        password = scanner.nextLine() + salt
     }
 
     fun readVars(log: String, pass: String) {
         login = log
-        password = encodePass(pass)
+//        password = encodePass(pass)
+        password = pass + salt
     }
 
-    private fun encodePass(pass: String): String {
-        val encoder = MessageDigest.getInstance("SHA-256")
-        return salt + encoder.digest(pass.toByteArray()).toString()
-    }
+//    private fun encodePass(pass: String): String {
+//        val encoder = MessageDigest.getInstance("SHA-256")
+//        return salt + encoder.digest(pass.toByteArray()).toString()
+//    }
 
     override fun toString(): String {
         return "User(name=$login, password=$password, token=$token)"
