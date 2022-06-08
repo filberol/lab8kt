@@ -86,12 +86,12 @@ class localization: ListResourceBundle() {
         arrayOf("ChoTitle", "File script"),
         arrayOf("ChoFilt", "Text files (*.txt)"),
         arrayOf("...", "..."),
-        //
         arrayOf("LoginPassRule", "Login and password should be at least 4 symbols"),
         arrayOf("Login", "Login"),
         arrayOf("Register", "Register"),
         arrayOf("UseExi", "This login has already been taken."),
         arrayOf("WrLogin", "Login or password are incorrect."),
+        arrayOf("WrPass", "Password is incorrect"),
         arrayOf("Fail", "Connection failed. Try again later."),
         arrayOf("SQlException", "Server DataBase error.")
     )

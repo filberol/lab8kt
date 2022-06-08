@@ -25,6 +25,7 @@ data class Person(
     fun getLocName() = Location.getName()
     fun getAction() = action
     fun setAction(a: Boolean) {action = a}
+    fun getOwner() = Owner
 
     fun toTable() = String.format("| %4s | %28s | %10s | %50s | %6s | %s | %10s | %10s | %32s |",
             Id, Name, Coordinates.toTable(), CreationDate, Height, Birthday.toString(),

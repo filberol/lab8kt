@@ -1,5 +1,6 @@
 package lab6client.gui
 
+import common.entities.User
 import lab6client.data.commands.server.ServerRemoveByID
 import lab6client.data.utilities.CollectionManager
 import lab6client.data.utilities.LanguageManager
@@ -13,7 +14,9 @@ import javax.swing.*
 class RemoveDialog(
     private val language: LanguageManager,
     private val collection: CollectionManager,
-    private val connection: ConnectionHandler
+    private val connection: ConnectionHandler,
+    private val user: User,
+    private val screen: HomeFrame
 ): JFrame() {
     private val frameWidth = 320
     private val frameHeight = 120
@@ -52,7 +55,7 @@ class RemoveDialog(
         idPanel.border = BorderFactory.createEmptyBorder(0,5,5,0)
         var idCombo = JComboBox(arrayOf(0))
         if (collection.getIds().size != 0) {
-            idCombo = JComboBox(collection.getIds().toTypedArray())
+            idCombo = JComboBox(collection.getIdsOwnedBy(user.getLogin()).toTypedArray())
             toRemove = idCombo.getItemAt(0)
         }
         idCombo.addActionListener {
@@ -101,6 +104,7 @@ class RemoveDialog(
         if (collection.contains(toRemove)) {
             ServerRemoveByID(language, collection, connection).execute(toRemove)
             dispose()
+            screen.updateCurrentTab()
         }
     }
 }

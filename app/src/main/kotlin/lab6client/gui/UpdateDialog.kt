@@ -24,6 +24,7 @@ class UpdateDialog(
     private val user: User,
     private val collection: CollectionManager,
     private val connection: ConnectionHandler,
+    private val screen: HomeFrame,
     private var toUpdate: Int = 0
 ): JFrame() {
     private val frameWidth = 600
@@ -65,7 +66,7 @@ class UpdateDialog(
         idPanel.border = BorderFactory.createEmptyBorder(0,5,5,0)
         var idCombo = JComboBox(arrayOf(0))
         if (collection.getIds().size != 0) {
-            idCombo = JComboBox(collection.getIds().toTypedArray())
+            idCombo = JComboBox(collection.getIdsOwnedBy(user.getLogin()).toTypedArray())
             toUpdate = idCombo.getItemAt(0)
         }
         idCombo.addActionListener {
@@ -126,5 +127,6 @@ class UpdateDialog(
         } catch (_: Exception) {}
         degenerated.clear()
         dispose()
+        screen.updateCurrentTab()
     }
 }

@@ -41,6 +41,10 @@ class CollectionManager(
 
     fun getIds() = ids
 
+    fun getIdsOwnedBy(user: String): List<Int> {
+        return ids.filter { getByID(it)!!.getOwner() == user }.ifEmpty { listOf(0) }
+    }
+
     fun getByID(id : Int): Person? {
         for (person in collection) {
             if (person.getID() == id) return person

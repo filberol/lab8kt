@@ -22,7 +22,8 @@ class AddDialog(
     private val builder: ObjectBuilder,
     private val user: User,
     private val collection: CollectionManager,
-    private val connection: ConnectionHandler
+    private val connection: ConnectionHandler,
+    private val screen: HomeFrame
 ): JFrame() {
     private val frameWidth = 700
     private val frameHeight = 800
@@ -104,5 +105,6 @@ class AddDialog(
         } catch (_: Exception) {}
         degenerated.clear()
         dispose()
+        screen.updateCurrentTab()
     }
 }

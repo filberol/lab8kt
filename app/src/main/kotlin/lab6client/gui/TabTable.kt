@@ -25,6 +25,8 @@ class TabTable(
     private lateinit var tableModel: PersonTableModel
     private lateinit var smartSorter: PersonTableSorter
 
+    private val textField = JTextField(40)
+
     init { add(constructSubPanel(), BorderLayout.SOUTH) }
 
     private fun constructTable(): JScrollPane {
@@ -51,7 +53,6 @@ class TabTable(
 
     private fun constructSubPanel(): JPanel {
         comboBox = JComboBox(Reflector(language).reflectTableColumns(Person::class))
-        val textField = JTextField(40)
         val filterButton = JButton(language.getString("OK"))
         var rowFilter: RowFilter<PersonTableModel, Int>? = null
         filterButton.addActionListener {
@@ -102,6 +103,11 @@ class TabTable(
         subPanel.remove(comboBox)
         comboBox = JComboBox(Reflector(language).reflectTableColumns(Person::class))
         subPanel.add(comboBox, 0)
+        repaint()
+    }
+
+    fun restoreFocus() {
+        textField.requestFocus()
     }
 
     fun updateTable() {
@@ -111,7 +117,6 @@ class TabTable(
         isVisible = false
         add(pane, BorderLayout.CENTER)
         isVisible = true
-        updateFilterBox()
     }
 
     class PersonTableModel(

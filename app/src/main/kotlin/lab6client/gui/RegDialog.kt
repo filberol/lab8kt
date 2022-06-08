@@ -43,10 +43,6 @@ class RegDialog(
     }
 
     private fun askLoginPass() {
-        if (connManager.isProcessing()) {
-            throw RuntimeException()
-        }
-
         //Dialog window
         dialog = CloseableJDialog(this, title, startup)
         dialog.isResizable = false

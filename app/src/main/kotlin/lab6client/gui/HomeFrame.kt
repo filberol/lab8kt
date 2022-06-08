@@ -87,6 +87,8 @@ class HomeFrame(
     }
 
     fun updateTableTab() { tableManagerPanel.updateTable() }
+    fun currTabTable() = tabbed.selectedIndex == 0
+    fun getTable() = tableManagerPanel
 
     fun updateCurrentTab() {
         when (tabbed.selectedIndex) {
@@ -104,12 +106,10 @@ class HomeFrame(
         if (tabbed.tabCount > 3) {
             tabbed.setTitleAt(3, language.getString("Console"))
         }
+        if (tabbed.selectedIndex == 0) {
+            tableManagerPanel.updateFilterBox()
+        }
         buttonMenu.updateLabels()
-//        if (tabbed.selectedComponent == tableManagerPanel) {
-//            tableManagerPanel.updateColumnLabels()
-//            tableManagerPanel.updateFilterBox()
-//            tableManagerPanel.updateTable()
-//        }
         updateCurrentTab()
 
         repaint()

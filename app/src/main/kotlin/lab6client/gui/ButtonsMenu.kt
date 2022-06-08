@@ -36,38 +36,33 @@ class ButtonsMenu(
     private val reLoginButton = JButton().also {
         it.background = Color.LIGHT_GRAY
         it.addActionListener {
-            try {
-                RegDialog(user, language, connection)
-                Thread(connection).start()
-            } catch (_: RuntimeException) {}
+            RegDialog(user, language, connection)
+            connection.tryToConnect()
         }
     }
+    private val listener = RefreshTimerListener(this, language, collection, connection, screen)
     private val refreshButton = JButton().also { butt ->
         butt.background = Color.GREEN
-        butt.addActionListener {
-            isVisible = false
-            (it.source as JButton).text = language.getString("Wait")
-            isVisible = true
-            val action = WaitForUpdate(language, collection, connection, screen, this)
-            Thread(action).start()
-        }
+        butt.addActionListener(listener)
     }
+    private val refreshTimer = Timer(5000, listener)
+
     private val addButton = JButton().also {
         it.background = Color.MAGENTA
         it.addActionListener {
-            AddDialog(validator, language, builder, user, collection, connection)
+            AddDialog(validator, language, builder, user, collection, connection, screen)
         }
     }
     private val removeButton = JButton().also {
         it.background = Color.ORANGE
         it.addActionListener {
-            RemoveDialog(language, collection, connection)
+            RemoveDialog(language, collection, connection, user, screen)
         }
     }
     private val updateButton = JButton().also {
         it.background = Color.CYAN
         it.addActionListener {
-            UpdateDialog(validator, language, builder, user, collection, connection)
+            UpdateDialog(validator, language, builder, user, collection, connection, screen)
         }
     }
     private val executeButton = JButton().also {
@@ -103,6 +98,7 @@ class ButtonsMenu(
         add(JPanel())
         add(langPackButton)
         updateLabels()
+        //refreshTimer.start()
     }
 
     fun updateLabels() {
@@ -154,38 +150,29 @@ class ButtonsMenu(
         override fun run() {
             ServerAdd(language, collection, connection).execute(null)
             screen.updateCurrentTab()
+            if (screen.currTabTable()) {
+                screen.getTable().restoreFocus()
+            }
             buttons.updateLabels()
         }
     }
 
-//    class LanguageComboBoxRenderer(): JLabel(), ListCellRenderer<Any> {
-//
-//        init {
-//            isOpaque = true
-//            horizontalAlignment = CENTER
-//            verticalAlignment = CENTER
-//        }
-
-//        override fun getListCellRendererComponent(
-//            list: JList<out Any>?,
-//            value: Any?,
-//            index: Int,
-//            isSelected: Boolean,
-//            cellHasFocus: Boolean
-//        ): Component {
-//            val selectedIndex = value as Int
-//            if (list != null) {
-//                if (isSelected) {
-//                    background = list.selectionBackground
-//                    foreground = list.selectionForeground
-//                } else {
-//                    background = list.background
-//                    foreground = list.foreground
-//                }
-//            }
-//
-//                //val langImage = ImageIcon(File)
-//        }
-//
-//    }
+    class RefreshTimerListener(
+        private val buttonPanel: ButtonsMenu,
+        private val language: LanguageManager,
+        private val collection: CollectionManager,
+        private val connection: ConnectionHandler,
+        private val screen: HomeFrame
+    ): ActionListener {
+        override fun actionPerformed(e: ActionEvent?) {
+            if (e!!.source is JButton) {
+                (e.source as JButton).text = language.getString("Wait")
+            }
+            buttonPanel.repaint()
+            if (screen.currTabTable()) {
+                val action = WaitForUpdate(language, collection, connection, screen, buttonPanel)
+                Thread(action).start()
+            }
+        }
+    }
 }
